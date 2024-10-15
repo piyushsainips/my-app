@@ -1,0 +1,182 @@
+/* Container for the dashboard */
+.dashboard-container {
+    text-align: center;
+    margin-top: 100px; /* To push the content below the header */
+}
+.dashboard-container .h2{
+    color: white;
+    border-radius: 20px;
+    background-color: black;
+    width: 310px;
+    height: 40px;
+    text-align: center;
+    align-content: center;
+    margin-left: 40%;
+}
+
+/* Title styled like Pornhub */
+.title {
+    position: absolute;
+    top: 1px;
+    left: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: black;
+    color:white;
+    width: 310px;
+    text-align: center;
+    align-content: center;
+    border-radius: 10px;
+    height: 60px;
+}
+
+.title span:first-child {
+    color:white; /* First part in black */
+}
+
+.title .hub {
+    color: black; /* Second part in orange */
+    background-color:orange;
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
+/* Styling the login button in the top-right corner */
+.login {
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    background-color:orange; /* Light blue color */
+    color: white;
+    height: 50px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Containers for options */
+.options-container {
+    display: flex;
+    justify-content: space-around; /* Distribute containers evenly */
+    margin-top: 50px; /* Space from the title */
+}
+
+/* Individual option card */
+.option-card {
+    width: 200px; /* Fixed width for consistency */
+    padding: 20px;
+    background-color:white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+}
+
+/* Hover effect for cards */
+.option-card:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Icon styling inside the option cards */
+.option-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+}
+
+/* Button styling for the options */
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    height: 40px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .options-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .option-card {
+        margin-bottom: 20px;
+    }
+}
+/* Profile container */
+.profile-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Profile icon */
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+    background-color: #f1f1f1;
+}
+
+/* Auth buttons */
+.auth-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.login, .register {
+    background-color:orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.login:hover, .register:hover {
+    background-color: #0056b3;
+}
+
