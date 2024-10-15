@@ -3,6 +3,7 @@ import './login.css'; // Importing CSS for styling
 import { useNavigate } from 'react-router-dom'; // Importing useNavigate for redirection
 import { app } from './firebase'; // Firebase app configuration
 import { getDatabase, ref, get, child } from 'firebase/database'; // Firebase database methods
+import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'; // Firebase storage methods
 
 const Login = () => {
     const navigate = useNavigate(); // Initialize the navigate function
@@ -33,6 +34,20 @@ const Login = () => {
         } catch (error) {
             setError('Error fetching user data.');
             console.error('Error fetching data:', error);
+            return null;
+        }
+    };
+
+    // Fetch profile photo URL from Firebase Storage
+    const fetchProfilePhoto = async (email) => {
+        const storage = getStorage(app);
+        const emailKey = email.replace('.', '_');
+        try {
+            const profilePhotoRef = storageRef(storage, `profilePhotos/${emailKey}`);
+            const url = await getDownloadURL(profilePhotoRef);
+            return url;
+        } catch (error) {
+            console.error('Error fetching profile photo:', error);
             return null;
         }
     };
@@ -68,9 +83,18 @@ const Login = () => {
         if (userData) {
             // Check if the password matches
             if (password === userData.password) {
+                // Fetch profile photo
+                const profilePhotoURL = await fetchProfilePhoto(email);
+
+                // Store necessary details in localStorage
+                localStorage.setItem('authToken', 'example_token'); // Simulate token generation
+                localStorage.setItem('studentName', userData.name);
+                localStorage.setItem('studentEmail', email);
+                localStorage.setItem('profilePhotoURL', profilePhotoURL || '');
+
                 setSuccess(true);
                 setError('');
-                navigate('/notes'); // Redirect to the study page on successful login
+                navigate('/'); // Redirect to the dashboard
             } else {
                 setError('Invalid email or password.');
             }

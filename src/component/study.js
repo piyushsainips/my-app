@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import './study.css'; // Importing CSS for styling
 
 import { getDatabase, ref, onValue } from 'firebase/database'; // Firebase database
@@ -23,39 +23,17 @@ const StudentDashboard = () => {
     const [profilePhotoURL, setProfilePhotoURL] = useState(''); // State for profile photo URL
     const [isWaiting, setIsWaiting] = useState(false); // State for waiting screen
 
-
-
     // Check if the user is logged in or registered
     useEffect(() => {
         const token = localStorage.getItem('authToken'); // Example: storing a token
         const name = localStorage.getItem('studentName'); // Fetch student name
         const registered = localStorage.getItem('isRegistered'); // Check if user has registered
+        const profilePhoto = localStorage.getItem('profilePhotoURL'); // Fetch profile photo URL from localStorage
 
         setIsLoggedIn(!!token); // Update login status based on token presence
         setIsRegistered(!!registered); // Check if user has registered
         if (name) setStudentName(name); // Set student name if found
-
-        // Fetch user profile photo from Firebase Database
-        if (token) {
-            const email = localStorage.getItem('studentEmail'); // Get the user's email
-
-            if (email) {  // Check if email exists before replacing
-                const sanitizedEmail = email.replace('.', '_'); // Replace '.' with '_'
-                const db = getDatabase();
-                const storage = getStorage();
-
-            // Fetch profile photo URL from Firebase
-            const userRef = ref(db, `students/${sanitizedEmail}`);
-            onValue(userRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.profilePhotoURL) {
-                    setProfilePhotoURL(data.profilePhotoURL); // Set profile photo URL
-                }
-            });
-        } else{
-            console.error('No email found in localStorage');
-        }
-    }
+        if (profilePhoto) setProfilePhotoURL(profilePhoto); // Set profile photo if found
 
         // Event listener to clear registration data when the page is reloaded or closed
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -85,7 +63,6 @@ const StudentDashboard = () => {
         navigate('/login'); // Navigate to the login page
     };
 
-    
     const handleRegisterClick = () => {
         // Show waiting screen before navigating
         setIsWaiting(true);
@@ -95,7 +72,6 @@ const StudentDashboard = () => {
             navigate('/register');
         }, 1500);
     };
-
 
     const handleProfileClick = () => {
         navigate('/profile'); // Navigate to the profile page
@@ -132,14 +108,10 @@ const StudentDashboard = () => {
                 <span>Knowledge</span> <span className="hub">Hub</span>
             </h1>
 
-            {/* Show Register button if user is not registered, otherwise show Login button */}
-            {!isRegistered ? (
+            {/* Show Register button if user is not registered and not logged in */}
+            {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
                     <button className="register" onClick={handleRegisterClick}>Register</button>
-                </div>
-            ) : !isLoggedIn && (
-                <div className="auth-buttons">
-                    <button className="login" onClick={handleLoginClick}>Login</button>
                 </div>
             )}
 
