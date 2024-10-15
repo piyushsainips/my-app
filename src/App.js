@@ -10,7 +10,7 @@ import RegisterPage from './component/register';
 import WaitingScreen from './component/waiting';
 import Admin from './component/admit_login';
 import DashboardPage from './component/dashboard_page';
-
+import Profile from './component/profile';
 // import {app} from './firebase';
 // import {getDatabase,ref,set} from 'firebase/database';
 
@@ -28,6 +28,7 @@ const App = () => {
                 <Route path="/waiting" element={<WaitingScreen />} />
                 <Route path="/admin" element={<Admin />} /> {/* Add the Admin route */}
                 <Route path="/dashboard" element={<DashboardPage />} /> {/* Add the Dashboard route */}
+                <Route path="/profile" element={<Profile />} /> {/* Add the Profile route */}
 
             </Routes>
         </Router>
