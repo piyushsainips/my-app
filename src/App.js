@@ -11,6 +11,10 @@ import WaitingScreen from './component/waiting';
 import Admin from './component/admit_login';
 import DashboardPage from './component/dashboard_page';
 
+// import {app} from './firebase';
+// import {getDatabase,ref,set} from 'firebase/database';
+
+
 const App = () => {
     return (
         <Router>

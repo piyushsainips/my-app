@@ -1,34 +1,61 @@
-// src/components/StudentDashboard.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import './study.css'; // Importing CSS for styling
 
+import { getDatabase, ref, onValue } from 'firebase/database'; // Firebase database
+import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'; // Firebase storage
+
 // Importing images from assets folder
-import notesIcon from '../assest/notes.jpeg'; // Corrected path
-import quizIcon from '../assest/quiz1.png';
-import chatbotIcon from '../assest/ai_chat.png';
-import profileIcon from '../assest/profile.jpeg';
+import notesIcon from '../assest/notes.jpeg'; // Correct path for Notes image
+import quizIcon from '../assest/quiz1.png'; // Correct path for Quiz image
+import chatbotIcon from '../assest/ai_chat.png'; // Correct path for Chatbot image
+import profileIcon from '../assest/profile.jpeg'; // Profile icon
 
 // Import the WaitingScreen component
 import WaitingScreen from './waiting';
 
 const StudentDashboard = () => {
-    const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [studentName, setStudentName] = useState('Student');
-    const [isRegistered, setIsRegistered] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
+    const navigate = useNavigate(); // Initialize the navigate function
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+    const [studentName, setStudentName] = useState('Student'); // State for student name
+    const [isRegistered, setIsRegistered] = useState(false); // State to track registration status
+    const [showMenu, setShowMenu] = useState(false); // State to toggle profile dropdown menu
+    const [profilePhotoURL, setProfilePhotoURL] = useState(''); // State for profile photo URL
     const [isWaiting, setIsWaiting] = useState(false); // State for waiting screen
+
+
 
     // Check if the user is logged in or registered
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        const name = localStorage.getItem('studentName');
-        const registered = localStorage.getItem('isRegistered');
+        const token = localStorage.getItem('authToken'); // Example: storing a token
+        const name = localStorage.getItem('studentName'); // Fetch student name
+        const registered = localStorage.getItem('isRegistered'); // Check if user has registered
 
-        setIsLoggedIn(!!token);
-        setIsRegistered(!!registered);
-        if (name) setStudentName(name);
+        setIsLoggedIn(!!token); // Update login status based on token presence
+        setIsRegistered(!!registered); // Check if user has registered
+        if (name) setStudentName(name); // Set student name if found
+
+        // Fetch user profile photo from Firebase Database
+        if (token) {
+            const email = localStorage.getItem('studentEmail'); // Get the user's email
+
+            if (email) {  // Check if email exists before replacing
+                const sanitizedEmail = email.replace('.', '_'); // Replace '.' with '_'
+                const db = getDatabase();
+                const storage = getStorage();
+
+            // Fetch profile photo URL from Firebase
+            const userRef = ref(db, `students/${sanitizedEmail}`);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.profilePhotoURL) {
+                    setProfilePhotoURL(data.profilePhotoURL); // Set profile photo URL
+                }
+            });
+        } else{
+            console.error('No email found in localStorage');
+        }
+    }
 
         // Event listener to clear registration data when the page is reloaded or closed
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -48,16 +75,17 @@ const StudentDashboard = () => {
 
     const handleNotesClick = () => {
         if (isLoggedIn) {
-            navigate('/notes');
+            navigate('/notes'); // Navigate to Notes if the user is logged in
         } else {
-            navigate('/login');
+            navigate('/login'); // Redirect to Login if not logged in
         }
     };
 
     const handleLoginClick = () => {
-        navigate('/login');
+        navigate('/login'); // Navigate to the login page
     };
 
+    
     const handleRegisterClick = () => {
         // Show waiting screen before navigating
         setIsWaiting(true);
@@ -68,8 +96,9 @@ const StudentDashboard = () => {
         }, 1500);
     };
 
+
     const handleProfileClick = () => {
-        navigate('/profile');
+        navigate('/profile'); // Navigate to the profile page
     };
 
     const handleLogout = () => {
@@ -86,18 +115,18 @@ const StudentDashboard = () => {
     };
 
     const toggleMenu = () => {
-        setShowMenu(!showMenu);
+        setShowMenu(!showMenu); // Toggle the dropdown menu
     };
 
     const handleTitleClick = () => {
-        navigate('/');
+        navigate('/'); // Navigate to home or the main dashboard page
     };
 
     return (
         <>
             {/* Show Waiting Screen if isWaiting is true */}
             {isWaiting && <WaitingScreen />}
-
+            
             {/* Styled title at the top left */}
             <h1 className="title" onClick={handleTitleClick}>
                 <span>Knowledge</span> <span className="hub">Hub</span>
@@ -118,10 +147,10 @@ const StudentDashboard = () => {
             {isLoggedIn && (
                 <div className="profile-container">
                     <img
-                        src={profileIcon}
+                        src={profilePhotoURL || profileIcon} // Use uploaded profile photo or fallback to default icon
                         alt="Profile"
                         className="profile-icon"
-                        onClick={toggleMenu}
+                        onClick={toggleMenu} // Toggle dropdown menu on click
                     />
                     {showMenu && (
                         <div className="dropdown-menu">
@@ -134,7 +163,7 @@ const StudentDashboard = () => {
 
             {/* Dashboard Content */}
             <div className="dashboard-container">
-                <h2 className='h2'>Welcome, {studentName}!</h2>
+                <h2>Welcome, {studentName}!</h2>
                 <p>Select an option below to continue:</p>
 
                 {/* Options for Notes, Quiz, and Chatbot */}

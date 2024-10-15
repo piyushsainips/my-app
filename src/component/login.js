@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './login.css'; // Importing CSS for styling
 import { useNavigate } from 'react-router-dom'; // Importing useNavigate for redirection
+import { app } from './firebase'; // Firebase app configuration
+import { getDatabase, ref, get, child } from 'firebase/database'; // Firebase database methods
 
 const Login = () => {
     const navigate = useNavigate(); // Initialize the navigate function
-    // States to store email and password
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -16,10 +17,30 @@ const Login = () => {
         return /\S+@\S+\.\S+/.test(email);
     };
 
+    // Fetch user data from Firebase by email
+    const fetchUserData = async (email) => {
+        const dbRef = ref(getDatabase(app)); // Get the database reference
+        try {
+            // Replace "." in the email to match the database key format
+            const emailKey = email.replace('.', '_');
+            const snapshot = await get(child(dbRef, `students/${emailKey}`));
+
+            if (snapshot.exists()) {
+                return snapshot.val(); // Return the user data if found
+            } else {
+                return null; // Return null if no user data exists
+            }
+        } catch (error) {
+            setError('Error fetching user data.');
+            console.error('Error fetching data:', error);
+            return null;
+        }
+    };
+
     // Handler for form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Reset any previous errors
         setError('');
         setSuccess(false);
@@ -39,23 +60,23 @@ const Login = () => {
         // Simulating a login process
         setLoading(true);
 
-        // Mocking a backend request
-        setTimeout(() => {
-            setLoading(false);
+        // Fetch the user data from Firebase
+        const userData = await fetchUserData(email);
 
-            // Fetching stored email and password from localStorage
-            const storedEmail = localStorage.getItem('studentEmail');
-            const storedPassword = localStorage.getItem('studentPassword');
+        setLoading(false); // Stop loading after the Firebase query completes
 
-            // Check if the entered email and password match the stored ones
-            if (email === storedEmail && password === storedPassword) {
+        if (userData) {
+            // Check if the password matches
+            if (password === userData.password) {
                 setSuccess(true);
                 setError('');
-                navigate('/study'); // Redirect to the study page on successful login
+                navigate('/notes'); // Redirect to the study page on successful login
             } else {
                 setError('Invalid email or password.');
             }
-        }, 2000);
+        } else {
+            setError('Invalid email or password.');
+        }
     };
 
     return (

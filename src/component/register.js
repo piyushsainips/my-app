@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css'; // Custom CSS for the registration form
 
+import { app } from './firebase'; // Firebase app configuration
+import { getDatabase, ref, set } from 'firebase/database';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase Storage
+
+
 const RegisterPage = () => {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate(); // For navigation after successful registration
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
@@ -11,20 +16,32 @@ const RegisterPage = () => {
         password: '',
         number: '',
         branch: '',
-        semester: ''
+        semester: '',
+        profilePhoto: null // New field for profile photo
+
     });
 
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({}); // For form validation
+
     const [showSecondSection, setShowSecondSection] = useState(false); // To toggle sections
     const [isTransitioning, setIsTransitioning] = useState(false); // For animation state
 
+    // Handle input changes and update form state
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+        if (e.target.name === 'profilePhoto') {
+            setFormData({
+                ...formData,
+                profilePhoto: e.target.files[0], // Handle profile photo upload
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [e.target.name]: e.target.value,
+            });
+        }
     };
 
+    // Form validation logic
     const validateFirstSection = () => {
         let formErrors = {};
         if (!formData.name) formErrors.name = 'Name is required';
@@ -55,17 +72,54 @@ const RegisterPage = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    // Function to upload profile photo to Firebase Storage and register user in the database
+    const registerUserInDatabase = async () => {
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+
+        const userId = formData.email.replace('.', '_'); // Use email as unique ID but replace "." to prevent key conflicts
+        let profilePhotoURL = '';
+
+        // If user uploaded a profile photo, upload it to Firebase Storage
+        if (formData.profilePhoto) {
+            const photoRef = storageRef(storage, `profilePhotos/${userId}`);
+            await uploadBytes(photoRef, formData.profilePhoto); // Upload the photo
+            profilePhotoURL = await getDownloadURL(photoRef); // Get the URL of the uploaded photo
+        }
+
+        // Save user data including the profile photo URL in the Firebase Realtime Database
+        set(ref(db, `students/${userId}`), {
+            name: formData.name,
+            surname: formData.surname,
+            email: formData.email,
+            password: formData.password,
+            number: formData.number,
+            branch: formData.branch,
+            semester: formData.semester,
+            profilePhotoURL // Store the profile photo URL
+        });
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate the form
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length === 0) {
-            // Registration successful, proceed
+            // If no errors, proceed with registration
             localStorage.setItem('studentName', formData.name);
-            localStorage.setItem('authToken', 'yourAuthTokenHere');
-            localStorage.setItem('isRegistered', 'true');
+            localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
+            localStorage.setItem('isRegistered', 'true'); // Mark user as registered
+            localStorage.setItem('studentEmail', formData.email);
+
+            // Register user in the Firebase database
+            await registerUserInDatabase();
+
+            // Navigate to dashboard after successful registration
             navigate('/');
         } else {
-            setErrors(validationErrors);
+            setErrors(validationErrors); // Set validation errors if any
         }
     };
 
@@ -155,6 +209,16 @@ const RegisterPage = () => {
                                 placeholder="Enter your semester"
                             />
                             {errors.semester && <span className="error">{errors.semester}</span>}
+                        </div>
+
+                        <div className="form-group1">
+                            <label>Profile Photo</label>
+                            <input
+                                type="file"
+                                name="profilePhoto"
+                                onChange={handleChange}
+                                accept="image/*"
+                            />
                         </div>
                         <button type="submit" className="btn">Create Account</button>
                     </div>
