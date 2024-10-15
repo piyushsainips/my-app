@@ -1,0 +1,47 @@
+/* src/components/WaitingScreen.css */
+
+.waiting-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it overlays other content */
+}
+
+.waiting-content {
+    text-align: center;
+}
+
+.waiting-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+    background-color: black;
+    color: white;
+    padding: 10px 20px; /* Increased padding for better aesthetics */
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+.waiting-title .hub {
+    color: black; /* Second part in orange */
+    background-color:orange;
+    padding: 0 10px;
+    border-radius: 5px;
+}
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
