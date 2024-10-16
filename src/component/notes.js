@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './notes.css';
-import { getDatabase, ref as databaseRef, child, get } from 'firebase/database'; // Firebase imports
+import { getDatabase, ref as databaseRef, get } from 'firebase/database'; // Firebase imports
 import { app } from './firebase'; // Import Firebase initialization
 
 function App() {
