@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './study.css'; // Importing CSS for styling
 
-import { getDatabase, ref, onValue } from 'firebase/database'; // Firebase database
-import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'; // Firebase storage
+import { } from 'firebase/database'; // Firebase database
+import { } from 'firebase/storage'; // Firebase storage
 
 // Importing images from assets folder
 import notesIcon from '../assest/notes.jpeg'; // Correct path for Notes image
@@ -59,9 +59,9 @@ const StudentDashboard = () => {
         }
     };
 
-    const handleLoginClick = () => {
-        navigate('/login'); // Navigate to the login page
-    };
+    // const handleLoginClick = () => {
+    //     navigate('/login'); // Navigate to the login page
+    // };
 
     const handleRegisterClick = () => {
         // Show waiting screen before navigating
