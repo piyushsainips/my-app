@@ -54,38 +54,25 @@ const StudentDashboard = () => {
     };
     const handleLogout = () => {
         const audio = new Audio(logoutTune); // Create a new Audio instance
-        audio.play(); // Play the logout sound immediately
+        audio.preload = 'auto'; // Preload the audio for instant playback
+        audio.play(); // Play the audio immediately
     
         // Show the waiting screen immediately
         setIsWaiting(true);
     
         // Simulate a delay before completing the logout process (e.g., 1.5 seconds)
         setTimeout(() => {
-            localStorage.removeItem('authToken');const audio = new Audio(logoutTune);
-            audio.preload = 'auto'; // Preload the audio for instant playback
-            
-            const handleLogout = () => {
-                audio.play(); // Play the preloaded logout sound
-            
-                // Show the waiting screen immediately
-                setIsWaiting(true);
-            
-                // Simulate a delay before completing the logout process (e.g., 1.5 seconds)
-                setTimeout(() => {
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('studentName');
-                    setIsLoggedIn(false); // Set login status to false
-                    setIsWaiting(false); // Hide the waiting screen
-                    navigate('/login'); // Redirect to the login page
-                }, 1500); // Delay of 1.5 seconds
-            };
-            
+            // Remove authToken and studentName from localStorage
+            localStorage.removeItem('authToken');
             localStorage.removeItem('studentName');
+            
+            // Update state and navigate to the login page
             setIsLoggedIn(false); // Set login status to false
             setIsWaiting(false); // Hide the waiting screen
             navigate('/login'); // Redirect to the login page
-        }, 1500); // Delay of 1.5 seconds
+        }, 4000); // Delay of 4 seconds
     };
+    
     
     
 
