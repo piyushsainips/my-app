@@ -117,7 +117,7 @@ function App() {
           </div>
         )}
 
-        {notes && (
+        {/* {notes && (
           <div className="notes-section">
             <h2>Notes for {branches[branch]},</h2>
             <ul>
@@ -126,16 +126,17 @@ function App() {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
 
         {pdfs.length > 0 && (
           <div className="pdf-section">
-            <h2>Available PDFs for {branches[branch]}, Semester {semester}:</h2>
+            <h2>Notes for {branches[branch]}:</h2>
             <ul>
               {pdfs.map((pdf, index) => (
                 <li key={index}>
-                  <a href={pdf.url} target="_blank" rel="noopener noreferrer">
-                    {pdf.name}
+                  <a className='url' href={pdf.url} target="_blank" rel="noopener noreferrer">
+                  {pdf.name.replace(/\.pdf$/, '')} {/* Remove the .pdf suffix from the name */}
+
                   </a>
                 </li>
               ))}

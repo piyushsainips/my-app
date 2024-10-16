@@ -13,7 +13,7 @@ const DashboardPage = () => {
 
   // Branch and semester data structure
   const branches = {
-    'CSE': ['Data Structures', 'Algorithms', 'Operating Systems','Intro to CS'],
+    'CSE': ['Physics', 'Into to C', 'BEE','Intro to CS'],
     'Mechanical': ['Thermodynamics', 'Fluid Mechanics', 'Machine Design'],
     'Civil': ['Structural Engineering', 'Geotechnical Engineering', 'Transportation Engineering'],
     'ECE': ['Circuit Theory', 'Electromagnetics', 'Control Systems'],
@@ -49,8 +49,11 @@ const DashboardPage = () => {
       const storage = getStorage(app); // Firebase Storage instance
       const database = getDatabase(app); // Firebase Realtime Database instance
 
+      // Get the file name without the .pdf extension
+      const fileNameWithoutPdf = file.name.replace(/\.pdf$/, '');
+
       // Reference for Firebase Storage (where file will be uploaded)
-      const fileRef = storageRef(storage, `notes/${branch}/semester_${semester}/${file.name}`);
+      const fileRef = storageRef(storage, `notes/${branch}/semester_${semester}/${fileNameWithoutPdf}`);
 
       // Upload file to Firebase Storage
       await uploadBytes(fileRef, file);
