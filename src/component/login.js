@@ -94,7 +94,11 @@ const Login = () => {
 
                 setSuccess(true);
                 setError('');
+<<<<<<< Updated upstream
                 navigate('/'); // Redirect to the dashboard
+=======
+                navigate('/'); // Redirect to the study page on successful login
+>>>>>>> Stashed changes
             } else {
                 setError('Invalid email or password.');
             }
