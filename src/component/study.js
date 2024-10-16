@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './study.css'; // Importing CSS for styling
+import logoutTune from '../assest/intro_music.mp3'; // Replace with the actual path to your audio file
+
 
 import { } from 'firebase/database'; // Firebase database
 import { } from 'firebase/storage'; // Firebase storage
@@ -50,6 +52,42 @@ const StudentDashboard = () => {
         localStorage.removeItem('studentName');
         localStorage.removeItem('authToken');
     };
+    const handleLogout = () => {
+        const audio = new Audio(logoutTune); // Create a new Audio instance
+        audio.play(); // Play the logout sound immediately
+    
+        // Show the waiting screen immediately
+        setIsWaiting(true);
+    
+        // Simulate a delay before completing the logout process (e.g., 1.5 seconds)
+        setTimeout(() => {
+            localStorage.removeItem('authToken');const audio = new Audio(logoutTune);
+            audio.preload = 'auto'; // Preload the audio for instant playback
+            
+            const handleLogout = () => {
+                audio.play(); // Play the preloaded logout sound
+            
+                // Show the waiting screen immediately
+                setIsWaiting(true);
+            
+                // Simulate a delay before completing the logout process (e.g., 1.5 seconds)
+                setTimeout(() => {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('studentName');
+                    setIsLoggedIn(false); // Set login status to false
+                    setIsWaiting(false); // Hide the waiting screen
+                    navigate('/login'); // Redirect to the login page
+                }, 1500); // Delay of 1.5 seconds
+            };
+            
+            localStorage.removeItem('studentName');
+            setIsLoggedIn(false); // Set login status to false
+            setIsWaiting(false); // Hide the waiting screen
+            navigate('/login'); // Redirect to the login page
+        }, 1500); // Delay of 1.5 seconds
+    };
+    
+    
 
     const handleNotesClick = () => {
         if (isLoggedIn) {
@@ -77,18 +115,7 @@ const StudentDashboard = () => {
         navigate('/profile'); // Navigate to the profile page
     };
 
-    const handleLogout = () => {
-        // Show waiting screen before logging out
-        setIsWaiting(true);
-        // Simulate logout processing time (e.g., 1.5 seconds)
-        setTimeout(() => {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('studentName');
-            setIsLoggedIn(false);
-            setIsWaiting(false);
-            navigate('/login');
-        }, 1500);
-    };
+    
 
     const toggleMenu = () => {
         setShowMenu(!showMenu); // Toggle the dropdown menu
