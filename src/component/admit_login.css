@@ -13,6 +13,7 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #f4f4f9;
+    padding: 15px;
 }
 
 .login-form {
@@ -20,7 +21,8 @@ body {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     text-align: center;
 }
 
@@ -43,7 +45,7 @@ body {
 }
 
 .form-group1 input {
-    width: 299px;
+    width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -90,4 +92,43 @@ body {
     color: #2ecc71;
     margin-bottom: 10px;
     font-size: 14px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .login-form {
+        padding: 20px;
+        width: 100%;
+    }
+    
+    .form-group1 input {
+        font-size: 14px;
+    }
+
+    .login-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form {
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    .login-form h2 {
+        font-size: 20px;
+    }
+
+    .form-group1 input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .login-btn {
+        font-size: 14px;
+        padding: 8px;
+    }
 }

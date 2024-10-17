@@ -3,7 +3,7 @@
     text-align: center;
     margin-top: 100px; /* To push the content below the header */
 }
-.dashboard-container .h2{
+.dashboard-container .h2 {
     color: white;
     border-radius: 20px;
     background-color: black;
@@ -11,7 +11,8 @@
     height: 40px;
     text-align: center;
     align-content: center;
-    margin-left: 40%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Title styled like Pornhub */
@@ -23,7 +24,7 @@
     font-weight: bold;
     cursor: pointer;
     background-color: black;
-    color:white;
+    color: white;
     width: 310px;
     text-align: center;
     align-content: center;
@@ -32,12 +33,12 @@
 }
 
 .title span:first-child {
-    color:white; /* First part in black */
+    color: white;
 }
 
 .title .hub {
-    color: black; /* Second part in orange */
-    background-color:orange;
+    color: black;
+    background-color: orange;
     padding: 0 10px;
     border-radius: 5px;
 }
@@ -47,43 +48,41 @@
     position: absolute;
     top: 7px;
     right: 20px;
-    background-color:orange; /* Light blue color */
+    background-color: orange;
     color: white;
     height: 50px;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
     font-weight: bold;
-    
     cursor: pointer;
     font-size: 16px;
 }
 
 .login:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
 }
 
 /* Containers for options */
 .options-container {
     display: flex;
-    justify-content: space-around; /* Distribute containers evenly */
-    margin-top: 50px; /* Space from the title */
+    justify-content: space-around;
+    margin-top: 50px;
 }
 
 /* Individual option card */
 .option-card {
-    width: 200px; /* Fixed width for consistency */
+    width: 200px;
     padding: 20px;
-    background-color:white;
+    background-color: white;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s;
 }
 
-/* Hover effect for cards */
 .option-card:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.05);
 }
 
 /* Icon styling inside the option cards */
@@ -108,16 +107,6 @@
     background-color: #45a049;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .options-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    .option-card {
-        margin-bottom: 20px;
-    }
-}
 /* Profile container */
 .profile-container {
     position: absolute;
@@ -167,7 +156,7 @@
 }
 
 .login, .register {
-    background-color:orange;
+    background-color: orange;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -180,3 +169,62 @@
     background-color: #0056b3;
 }
 
+/* Responsive Design */
+
+/* For tablets and smaller screens */
+@media (max-width: 768px) {
+    .dashboard-container .h2 {
+        width: 90%;
+        margin: 20px auto;
+        height: auto;
+    }
+    .title {
+        width: 90%;
+        font-size: 28px;
+        height: auto;
+    }
+    .options-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .option-card {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+    .login {
+        width: auto;
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+/* For mobile screens */
+@media (max-width: 480px) {
+    .dashboard-container {
+        margin-top: 50px;
+    }
+    .dashboard-container .h2 {
+        width: 100%;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+    .title {
+        width: 100%;
+        font-size: 22px;
+        height: auto;
+        left: 0;
+        margin-top: 10px;
+    }
+    .options-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .option-card {
+        width: 90%;
+        margin-bottom: 15px;
+    }
+    .login {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}

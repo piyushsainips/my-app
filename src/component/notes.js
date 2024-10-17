@@ -20,9 +20,14 @@ function App() {
 
   const notesData = {
     CSE: {
-      1: ['Intro to CS', 'Mathematics 1', 'Physics 1','Data Structures'],
-      2: ['Data Structures', 'Mathematics 2', 'Physics 2'],
-      3: ['Data Structures 3', 'Mathematics 3', 'Physics 3'],
+      1: [],
+      2: [],
+      3: [],
+      4: [],
+      5: [],
+      6: [],
+      7: [],
+      8: [],
       // Add more subjects
     },
     ECE: {

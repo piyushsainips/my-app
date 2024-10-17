@@ -13,7 +13,7 @@ const DashboardPage = () => {
 
   // Branch and semester data structure
   const branches = {
-    'CSE': ['Physics', 'Into to C', 'BEE','Intro to CS'],
+    'CSE': ['Physics', 'Into to C', 'BEE','Intro to CS','Engineering mathematics 1','Engineering mathematics 2','Chemistry','MEFA','M.E.','Environmental Eng.','DSA','C++','S.E.','Linux','AEM','D.E.','Python','Java','Discrete Mathematics','TOC','MPI','CC','DMW','DS','COA','ML','CN','OS','CD','DIP','NLP','ISS','IOT','AOA','GAI','Disaster Management','Deep Learning'],
     'Mechanical': ['Thermodynamics', 'Fluid Mechanics', 'Machine Design'],
     'Civil': ['Structural Engineering', 'Geotechnical Engineering', 'Transportation Engineering'],
     'ECE': ['Circuit Theory', 'Electromagnetics', 'Control Systems'],
