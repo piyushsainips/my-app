@@ -3,6 +3,8 @@ import './dashboard_page.css';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as databaseRef, push } from 'firebase/database';
 import { app } from './firebase'; // Import your Firebase initialization
+import Uploading from './upload'; // Import the Loading component
+
 
 const DashboardPage = () => {
   const [branch, setBranch] = useState('');
@@ -10,6 +12,8 @@ const DashboardPage = () => {
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
+  const [isUploading, setisUploading] = useState(false); // Loading state
+
 
   // Branch and semester data structure
   const branches = {
@@ -45,6 +49,8 @@ const DashboardPage = () => {
       return;
     }
 
+    setisUploading(true); // Show the loading screen
+
     try {
       const storage = getStorage(app); // Firebase Storage instance
       const database = getDatabase(app); // Firebase Realtime Database instance
@@ -75,11 +81,16 @@ const DashboardPage = () => {
     } catch (error) {
       console.error('Error uploading file:', error);
       setMessage('Error uploading file. Please try again.');
+    } finally {
+      setisUploading(false); // Hide the loading screen after the process is done
     }
   };
 
   return (
     <div className="dashboard-container1">
+      {/* Conditionally render the Loading component */}
+      {isUploading && <Uploading />}
+
       <h2 className="up">Upload Notes</h2>
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
