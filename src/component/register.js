@@ -122,7 +122,7 @@ const RegisterPage = () => {
   return (
     <div className="register-container">
       {/* Conditionally render the Loading component */}
-      {isLoading && <Loading />}
+      {isLoading && <Loading message="Creating your account, please wait..." />}
 
       <h2>Student Registration</h2>
       <form onSubmit={handleSubmit} className={`register-form1 ${isTransitioning ? 'transition' : ''}`}>
