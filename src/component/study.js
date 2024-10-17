@@ -70,7 +70,7 @@ const StudentDashboard = () => {
             setIsLoggedIn(false); // Set login status to false
             setIsWaiting(false); // Hide the waiting screen
             navigate('/login'); // Redirect to the login page
-        }, 4000); // Delay of 4 seconds
+        }, 5000); // Delay of 4 seconds
     };
     
     
