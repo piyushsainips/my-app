@@ -11,78 +11,79 @@
     height: 40px;
     text-align: center;
     align-content: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 40%;
 }
 
 /* Title styled like Pornhub */
 .title {
     position: absolute;
-    top: 1px;
+    top: 20px; /* Adjust top for better visibility */
     left: 20px;
-    font-size: 36px;
+    font-size: 28px; /* Reduced size for better fit on smaller screens */
     font-weight: bold;
     cursor: pointer;
     background-color: black;
     color: white;
-    width: 310px;
-    text-align: center;
-    align-content: center;
+    padding: 10px 15px; /* Adjust padding for better spacing */
     border-radius: 10px;
-    height: 60px;
+    text-align: center;
+    z-index: 1000; /* Make sure it's always on top */
 }
 
 .title span:first-child {
-    color: white;
+    color: white; /* First part in white */
 }
 
 .title .hub {
-    color: black;
+    color: black; /* Second part in orange */
     background-color: orange;
     padding: 0 10px;
     border-radius: 5px;
 }
 
-/* Styling the login button in the top-right corner */
-.login {
+/* Styling the login and register buttons */
+.login, .register {
     position: absolute;
-    top: 7px;
+    top: 20px;
     right: 20px;
-    background-color: orange;
+    background-color: orange; /* Light orange */
     color: white;
-    height: 50px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+    height: auto; /* Let it resize automatically */
 }
 
-.login:hover {
-    background-color: #0056b3;
+.login:hover, .register:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 /* Containers for options */
 .options-container {
     display: flex;
-    justify-content: space-around;
-    margin-top: 50px;
+    justify-content: space-around; /* Distribute containers evenly */
+    margin-top: 50px; /* Space from the title */
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
 }
 
 /* Individual option card */
 .option-card {
-    width: 200px;
+    width: 200px; /* Fixed width */
     padding: 20px;
     background-color: white;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s;
+    margin: 15px; /* Adjust margin for better spacing */
 }
 
+/* Hover effect for cards */
 .option-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 /* Icon styling inside the option cards */
@@ -148,83 +149,64 @@
     background-color: #f1f1f1;
 }
 
-/* Auth buttons */
-.auth-buttons {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.login, .register {
-    background-color: orange;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-.login:hover, .register:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive Design */
-
-/* For tablets and smaller screens */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .dashboard-container .h2 {
-        width: 90%;
-        margin: 20px auto;
-        height: auto;
-    }
     .title {
-        width: 90%;
-        font-size: 28px;
-        height: auto;
+        font-size: 24px; /* Smaller font on tablets */
+        padding: 8px 10px;
     }
+
+    .login, .register {
+        font-size: 12px; /* Smaller font for buttons */
+        padding: 8px 10px;
+        top: 60px; /* Push buttons down a bit */
+    }
+
     .options-container {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column; /* Stack options vertically */
+        align-items: center; /* Center align */
     }
+
     .option-card {
-        width: 80%;
+        width: 90%; /* Full width on small screens */
         margin-bottom: 20px;
     }
-    .login {
-        width: auto;
-        padding: 8px 15px;
+}
+
+@media (max-width: 1024px) {
+    /* Adjustments for larger tablets (like Nexus 7) */
+    .title {
+        font-size: 28px;
+    }
+
+    .login, .register {
         font-size: 14px;
+    }
+
+    .option-card {
+        width: 80%; /* Slightly smaller width */
     }
 }
 
-/* For mobile screens */
 @media (max-width: 480px) {
-    .dashboard-container {
-        margin-top: 50px;
-    }
-    .dashboard-container .h2 {
-        width: 100%;
-        font-size: 18px;
-        margin-top: 20px;
-    }
+    /* Adjustments for small screens and smartphones */
     .title {
-        width: 100%;
-        font-size: 22px;
-        height: auto;
-        left: 0;
-        margin-top: 10px;
+        font-size: 20px;
+        width: 80%;
+        left: 10px; /* Move title closer to the edge */
     }
-    .options-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    .option-card {
-        width: 90%;
-        margin-bottom: 15px;
-    }
-    .login {
+
+    .login, .register {
         font-size: 12px;
-        padding: 8px 12px;
+        padding: 5px 10px;
+        top: 60px; /* Adjust top margin */
+    }
+
+    .option-card {
+        width: 100%; /* Full width for mobile screens */
+    }
+
+    .dashboard-container {
+        margin-top: 60px; /* Reduce margin for better visibility */
     }
 }

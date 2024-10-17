@@ -1,5 +1,3 @@
-/* container.css */
-
 .container {
   max-width: 600px;
   margin: 50px auto;
@@ -9,11 +7,10 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
-
-.container .h1 {
+.container .h1{
   background-color: black;
   color: white;
-  border-radius: 20px;
+  border-radius: 20px ;
 }
 
 h1 {
@@ -54,92 +51,35 @@ ul {
 }
 
 ul li {
-  background: orange;
+  background:orange;
   color: black;
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 4px;
 }
-
 .note-title {
-  position: relative;
-  font-size: 24px;
+  position: absolute;
+  top: 1px;
+  left: 20px;
+  font-size: 36px;
   font-weight: bold;
   cursor: pointer;
   background-color: black;
-  color: white;
-  width: 100%;
+  color:white;
+  width: 310px;
   text-align: center;
   align-content: center;
   border-radius: 10px;
-  padding: 15px 0;
-  margin-bottom: 20px;
+  height: 60px;
 }
-
-.note-title .hub {
-  color: black;
+.note-title .hub{
+  color: black; /* Second part in orange */
   background-color: orange;
   padding: 0 10px;
   border-radius: 5px;
 }
 
-.pdf-section .url {
-  color: black;
-  text-decoration: none;
-}
-
-/* Responsive Design */
-
-@media (max-width: 768px) {
-  .container {
-    padding: 15px;
-    margin: 20px auto;
-  }
-
-  .note-title {
-    font-size: 20px;
-    padding: 10px 0;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
-
-  .form-group select {
-    font-size: 14px;
-  }
-
-  ul li {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .notes-section h2 {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
-    margin: 10px auto;
-  }
-
-  h1 {
-    font-size: 18px;
-  }
-
-  .note-title {
-    font-size: 18px;
-    padding: 8px;
-  }
-
-  .notes-section h2 {
-    font-size: 16px;
-  }
-
-  ul li {
-    font-size: 12px;
-    padding: 6px;
-  }
+.pdf-section .url{
+color: black;
+text-decoration: none;
 }

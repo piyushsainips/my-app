@@ -1,8 +1,5 @@
-/* register.css */
-
 .register-container {
-    width: 100%;
-    max-width: 320px;
+    width: 320px;
     margin: 50px auto;
     padding: 20px;
     background-color: white;
@@ -13,7 +10,6 @@
 
 .register-container h2 {
     margin-bottom: 20px;
-    font-size: 24px;
 }
 
 .register-form1 .form {
@@ -30,7 +26,7 @@
 }
 
 .register-form1 input {
-    width: 100%;
+    width: 30px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -50,7 +46,7 @@
     background-color: #4CAF50;
     color: white;
     border: none;
-    margin-top: 10px;
+    margin-top:10px ;
     border-radius: 10px;
     cursor: pointer;
 }
@@ -58,7 +54,6 @@
 .btn:hover {
     background-color: #45a049;
 }
-
 .transition {
     opacity: 0;
     transform: translateY(-20px);
@@ -75,7 +70,6 @@
     transform: translateY(0);
     transition: all 0.5s ease;
 }
-
 .loading-screen {
     position: fixed;
     top: 0;
@@ -108,46 +102,3 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
-
-@media (max-width: 768px) {
-    .register-container {
-        padding: 15px;
-        width: 90%;
-    }
-
-    .register-container h2 {
-        font-size: 20px;
-    }
-
-    .register-form1 input {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .btn {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .register-container {
-        padding: 10px;
-        margin: 20px auto;
-    }
-
-    .register-container h2 {
-        font-size: 18px;
-    }
-
-    .register-form1 input {
-        font-size: 12px;
-        padding: 6px;
-    }
-
-    .btn {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-}
