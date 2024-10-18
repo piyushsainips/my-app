@@ -1,41 +1,51 @@
 /* Container for the dashboard */
 .dashboard-container {
     text-align: center;
-    margin-top: 100px; /* To push the content below the header */
-}
-.dashboard-container .h2 {
-    color: white;
-    border-radius: 20px;
-    background-color: black;
-    width: 310px;
-    height: 40px;
-    text-align: center;
-    align-content: center;
-    margin-left: 40%;
+    margin-top: 100px;
+    animation: fadeIn 1s ease-in-out;
 }
 
-/* Title styled like Pornhub */
+/* Fade-in animation for the dashboard container */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dashboard title styled like Pornhub */
 .title {
     position: absolute;
-    top: 20px; /* Adjust top for better visibility */
+    top: 20px;
     left: 20px;
-    font-size: 28px; /* Reduced size for better fit on smaller screens */
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     background-color: black;
     color: white;
-    padding: 10px 15px; /* Adjust padding for better spacing */
+    padding: 10px 15px;
     border-radius: 10px;
     text-align: center;
-    z-index: 1000; /* Make sure it's always on top */
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.title:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .title span:first-child {
-    color: white; /* First part in white */
+    color: white;
 }
 
 .title .hub {
-    color: black; /* Second part in orange */
+    color: black;
     background-color: orange;
     padding: 0 10px;
     border-radius: 5px;
@@ -46,44 +56,55 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: orange; /* Light orange */
+    background-color: orange;
     color: white;
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
     font-size: 14px;
-    height: auto; /* Let it resize automatically */
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.3);
 }
 
 .login:hover, .register:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #ff9900;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 165, 0, 0.5);
 }
 
 /* Containers for options */
 .options-container {
     display: flex;
-    justify-content: space-around; /* Distribute containers evenly */
-    margin-top: 50px; /* Space from the title */
-    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    justify-content: space-around;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    column-gap: 300px;
+    animation: fadeInOptions 1.2s ease-in-out;
+}
+
+/* Option cards fade in with slight delay */
+@keyframes fadeInOptions {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Individual option card */
 .option-card {
-    width: 200px; /* Fixed width */
+    width: 200px;
     padding: 20px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s;
-    margin: 15px; /* Adjust margin for better spacing */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 15px;
 }
 
-/* Hover effect for cards */
 .option-card:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Icon styling inside the option cards */
@@ -91,6 +112,11 @@
     width: 100px;
     height: 100px;
     margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+
+.option-card:hover .option-icon {
+    transform: rotate(10deg);
 }
 
 /* Button styling for the options */
@@ -102,10 +128,14 @@
     padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.3);
 }
 
 .btn:hover {
     background-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 128, 0, 0.4);
 }
 
 /* Profile container */
@@ -121,6 +151,12 @@
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s;
+}
+
+.profile-icon:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
 }
 
 /* Dropdown menu */
@@ -130,9 +166,17 @@
     right: 0;
     background-color: white;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 100;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.profile-container:hover .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .dropdown-menu button {
@@ -143,6 +187,7 @@
     border: none;
     background: none;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .dropdown-menu button:hover {
@@ -152,29 +197,28 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .title {
-        font-size: 24px; /* Smaller font on tablets */
+        font-size: 24px;
         padding: 8px 10px;
     }
 
     .login, .register {
-        font-size: 12px; /* Smaller font for buttons */
+        font-size: 12px;
         padding: 8px 10px;
-        top: 60px; /* Push buttons down a bit */
+        top: 60px;
     }
 
     .options-container {
-        flex-direction: column; /* Stack options vertically */
-        align-items: center; /* Center align */
+        flex-direction: column;
+        align-items: center;
     }
 
     .option-card {
-        width: 90%; /* Full width on small screens */
+        width: 90%;
         margin-bottom: 20px;
     }
 }
 
 @media (max-width: 1024px) {
-    /* Adjustments for larger tablets (like Nexus 7) */
     .title {
         font-size: 28px;
     }
@@ -184,29 +228,28 @@
     }
 
     .option-card {
-        width: 80%; /* Slightly smaller width */
+        width: 80%;
     }
 }
 
 @media (max-width: 480px) {
-    /* Adjustments for small screens and smartphones */
     .title {
         font-size: 20px;
         width: 80%;
-        left: 10px; /* Move title closer to the edge */
+        left: 10px;
     }
 
     .login, .register {
         font-size: 12px;
         padding: 5px 10px;
-        top: 60px; /* Adjust top margin */
+        top: 60px;
     }
 
     .option-card {
-        width: 100%; /* Full width for mobile screens */
+        width: 100%;
     }
 
     .dashboard-container {
-        margin-top: 60px; /* Reduce margin for better visibility */
+        margin-top: 60px;
     }
 }

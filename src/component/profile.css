@@ -1,41 +1,225 @@
-.profile-container {
-    display: flex;
-    margin-right: 36%;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
-    background-color: #f4f4f4;
+/* General styles for the profile container */
+.profile-container1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  height: 100vh;
+  font-family: "Arial", sans-serif;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Fade-in animation for the entire container */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  .profile-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 400px;
-    height: 80%;
-    
-    text-align: center;
-    
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .profile-pic img {
-    border-radius: 50%;
-    margin-top: 90px;
-    width: 100px;
-    height: 100px;
-    margin-bottom: 20px;
+}
+
+.header1 {
+  text-align: left;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+  color: #fff;
+}
+
+.header1 h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #fff;
+  animation: slideIn 1.2s ease;
+}
+
+.header1 p {
+  margin: 5px 0;
+  color: #fff;
+  opacity: 0.8;
+}
+
+/* Slide-in animation for the header */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
   }
-  
-  .profile-info h2 {
-    margin: 0;
-    color: #333;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  .profile-info p {
-    color: #555;
-    padding-top: 10px;
-    font-size: 16px;
-    margin: 10px 0;
+}
+
+/* Profile details section */
+.profile-details1 {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.2);
+  animation: growIn 1s ease-in-out;
+  transition: transform 0.5s;
+}
+
+/* Grow-in animation for profile card */
+@keyframes growIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
   }
-  
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Profile picture and info section */
+.profile-info1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+}
+
+.profile-picture1 {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.profile-picture1:hover {
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.profile-info1 h3 {
+  font-size: 22px;
+  color: #333;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.profile-info1 p {
+  font-size: 14px;
+  color: #666;
+  margin-left: 20px;
+}
+
+/* Button styling and hover effects */
+.edit-btn1 {
+  background-color: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 4px 10px rgba(29, 78, 216, 0.3);
+}
+
+.edit-btn1:hover {
+  background-color: #2563eb;
+  transform: translateY(-3px);
+}
+
+/* Form fields section */
+.form-fields1 {
+  margin-top: 20px;
+}
+
+.field-row1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.field1 {
+  flex: 1;
+  margin-right: 10px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.field1:last-child {
+  margin-right: 0;
+}
+
+.field1:hover {
+  transform: scale(1.02);
+}
+
+.field1 label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.field1 input,
+.field1 p {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field1 input:focus {
+  border-color: #2563eb;
+  box-shadow: 0px 0px 10px rgba(29, 78, 216, 0.3);
+  outline: none;
+}
+
+.field1 p {
+  color: #666;
+  font-size: 14px;
+  padding: 0;
+}
+
+/* Email section */
+.email-section1 {
+  margin-top: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.email-section1 h4 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.email-section1 p {
+  display: inline-block;
+  color: #333;
+  margin-right: 10px;
+}
+
+.email-section1 span {
+  color: #777;
+  font-size: 12px;
+}
+
+.add-email-btn1 {
+  background-color: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0px 4px 10px rgba(29, 78, 216, 0.3);
+}
+
+.add-email-btn1:hover {
+  background-color: #2563eb;
+  transform: translateY(-3px);
+}

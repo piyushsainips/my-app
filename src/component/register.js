@@ -173,7 +173,7 @@ const RegisterPage = () => {
               />
               {errors.password && <span className="error">{errors.password}</span>}
             </div>
-            <button type="button" className="btn" onClick={handleContinue}>Continue</button>
+            <button type="button" className="btn1" onClick={handleContinue}>Continue</button>
           </div>
         ) : (
           <div className="second-section">
@@ -221,7 +221,7 @@ const RegisterPage = () => {
               />
             </div>
             {errors.submit && <span className="error">{errors.submit}</span>}
-            <button type="submit" className="btn">Create Account</button>
+            <button type="submit" className="btn2">Create Account</button>
           </div>
         )}
       </form>
