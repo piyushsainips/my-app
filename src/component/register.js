@@ -1,4 +1,3 @@
-// src/components/RegisterPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css'; // Custom CSS for the registration form
@@ -6,6 +5,7 @@ import { app } from './firebase'; // Firebase app configuration
 import { getDatabase, ref, set } from 'firebase/database';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase Storage
 import Loading from './waiting1'; // Import the Loading component
+import logoutTune from '../assest/intro_music.mp3'; // Import the MP3 file
 
 const RegisterPage = () => {
   const navigate = useNavigate(); // For navigation after successful registration
@@ -95,29 +95,37 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length === 0) {
-      setIsLoading(true); // Show loading screen
-      try {
-        await registerUserInDatabase();
-        localStorage.setItem('studentName', formData.name);
-        localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
-        localStorage.setItem('isRegistered', 'true'); // Mark user as registered
-        localStorage.setItem('studentEmail', formData.email);
+  e.preventDefault();
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length === 0) {
+    setIsLoading(true); // Show loading screen
 
-        navigate('/'); // Navigate to dashboard after successful registration
-      } catch (error) {
-        console.error("Error during registration:", error);
-        // Optionally, set an error state to display to the user
-        setErrors({ submit: "Registration failed. Please try again." });
-      } finally {
-        setIsLoading(false); // Hide loading screen
-      }
-    } else {
-      setErrors(validationErrors);
+    const audio = new Audio(logoutTune); // Play the MP3 audio
+    audio.loop = true; // Loop the audio until process finishes
+    audio.preload = 'auto'; // Preload the audio for instant playback
+    audio.play(); // Play the sound
+
+    try {
+      await registerUserInDatabase(); // Register the user in the database
+      localStorage.setItem('studentName', formData.name);
+      localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
+      localStorage.setItem('isRegistered', 'true'); // Mark user as registered
+      localStorage.setItem('studentEmail', formData.email);
+
+      audio.pause(); // Stop the audio when registration is successful
+      navigate('/'); // Navigate to the dashboard after successful registration
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setErrors({ submit: "Registration failed. Please try again." });
+    } finally {
+      audio.pause(); // Stop the audio regardless of success or failure
+      setIsLoading(false); // Hide loading screen
     }
-  };
+  } else {
+    setErrors(validationErrors); // Show validation errors
+  }
+};
+
 
   return (
     <div className="register-container">
