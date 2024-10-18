@@ -1,14 +1,3 @@
-/* Apply background to the entire page */
-body {
-    background-image: url('../assest/glass101.jpg'); /* Replace with the actual path to your image */
-    background-size: cover; /* Ensures the image covers the entire page */
-    background-position: center; /* Centers the background image */
-    background-repeat: no-repeat; /* Prevents repeating the image */
-    height: 100vh; /* Full viewport height */
-    margin: 0;
-    padding: 0;
-}
-
 /* Container for registration form */
 .register-container {
     width: 400px;  /* Increased width for better readability */
@@ -20,8 +9,6 @@ body {
     text-align: center;
     position: relative;
     transition: transform 0.4s ease-in-out;
-    backdrop-filter: blur(10px); /* Adds a blur effect to the background inside the container */
-
 }
 
 .register-container:hover {
