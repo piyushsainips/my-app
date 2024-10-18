@@ -22,7 +22,7 @@ const Profile = () => {
     <div className="profile-container1">
       <div className="header1">
         <h2>Welcome, Amanda</h2>
-        <p>Tue, 07 June 2022</p>
+        {/* <p>Tue, 07 June 2022</p> */}
       </div>
       <div className="profile-details1">
         <div className="profile-info1">
