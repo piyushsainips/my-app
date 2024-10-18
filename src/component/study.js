@@ -149,8 +149,8 @@ const StudentDashboard = () => {
 
             {/* Dashboard Content */}
             <div className="dashboard-container">
-                <h2>Welcome, {studentName}!</h2>
-                <p>Select an option below to continue:</p>
+                <h1>Welcome, {studentName}!</h1>
+                <h2>Select an option below to continue:</h2>
 
                 {/* Options for Notes, Quiz, and Chatbot */}
                 <div className="options-container">
