@@ -69,6 +69,7 @@
   transition: transform 0.5s;
 }
 
+
 /* Grow-in animation for profile card */
 @keyframes growIn {
   from {
@@ -93,6 +94,7 @@
 .profile-picture1 {
   width: 90px;
   height: 90px;
+  margin-right: -400px;
   border-radius: 50%;
   transition: box-shadow 0.3s ease-in-out;
 }
@@ -166,7 +168,7 @@
 
 .field1 input,
 .field1 p {
-  width: 100%;
+  width: 90%;
   padding: 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -181,9 +183,12 @@
 }
 
 .field1 p {
-  color: #666;
-  font-size: 14px;
-  padding: 0;
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Email section */
