@@ -165,7 +165,7 @@ const StudentDashboard = () => {
                         <img src={quizIcon} alt="Quiz Icon" className="option-icon" />
                         <h3>Quiz</h3>
                         <p>Test your knowledge by taking quizzes on various subjects.</p>
-                        <button className="btn" onClick={() => navigate('/quiz')}>Start Quiz</button>
+                        <button className="btn" onClick={() => navigate('/QuizPanel')}>Start Quiz</button>
                     </div>
 
                     <div className="option-card">

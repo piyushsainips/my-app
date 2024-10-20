@@ -1,104 +1,102 @@
-import React, { useState } from "react";
-import "./quiz.css"; // Add this file for styling
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import './quiz.css'; // Import the CSS file
 
-const quizData = [
-  {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Jupiter", "Venus"],
-    answer: "Mars",
-  },
-  {
-    question: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Lisbon"],
-    answer: "Paris",
-  },
-  {
-    question: "Which element is found in all organic compounds?",
-    options: ["Hydrogen", "Oxygen", "Nitrogen", "Carbon"],
-    answer: "Carbon",
-  },
-];
+const Quiz = () => {
+  const { state } = useLocation();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [showResult, setShowResult] = useState(false);
 
-const QuizApp = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [isFinished, setIsFinished] = useState(false);
+  const questions = [
+    {
+      question: "What is the capital of France?",
+      options: ["Paris", "London", "Berlin", "Madrid"],
+      correctAnswer: "Paris"
+    },
+    {
+      question: "Which planet is known as the Red Planet?",
+      options: ["Earth", "Mars", "Jupiter", "Saturn"],
+      correctAnswer: "Mars"
+    },
+    // Add more questions as needed
+  ];
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
+  const handleOptionChange = (e, questionIndex) => {
+    setSelectedOptions({
+      ...selectedOptions,
+      [questionIndex]: e.target.value,
+    });
   };
 
-  const handleNextQuestion = () => {
-    if (selectedOption === quizData[currentQuestion].answer) {
-      setScore(score + 1);
-    }
-    setSelectedOption(null);
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setIsFinished(true);
-    }
+  const submitQuiz = () => {
+    setShowResult(true);
   };
 
-  const restartQuiz = () => {
-    setCurrentQuestion(0);
-    setScore(0);
-    setIsFinished(false);
+  const getCorrectAnswerCount = () => {
+    let correct = 0;
+    questions.forEach((q, index) => {
+      if (selectedOptions[index] === q.correctAnswer) {
+        correct++;
+      }
+    });
+    return correct;
   };
+
+  if (showResult) {
+    const correctAnswers = getCorrectAnswerCount();
+    const incorrectAnswers = questions.length - correctAnswers;
+
+    return (
+      <div className="quiz-container result-container">
+        <h2>Quiz Results</h2>
+        <p>Correct Answers: {correctAnswers}</p>
+        <p>Incorrect Answers: {incorrectAnswers}</p>
+        <p>Total Questions: {questions.length}</p>
+
+        <div className="dashboard">
+          <div className="correct">Correct: {correctAnswers}</div>
+          <div className="incorrect">Incorrect: {incorrectAnswers}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="quiz-container">
-      {!isFinished ? (
-        <div className="quiz-box">
-          <h2 className="question-number">
-            Question {currentQuestion + 1}/{quizData.length}
-          </h2>
-          <h3 className="question">{quizData[currentQuestion].question}</h3>
-          <div className="options">
-            {quizData[currentQuestion].options.map((option) => (
-              <button
-                key={option}
-                className={`option-button ${
-                  selectedOption === option ? "selected" : ""
-                }`}
-                onClick={() => handleOptionClick(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-          <div className="controls">
-            <button
-              className="next-button"
-              onClick={handleNextQuestion}
-              disabled={!selectedOption}
-            >
-              {currentQuestion < quizData.length - 1 ? "Next" : "Submit"}
-            </button>
-          </div>
-          <div className="progress-bar">
-            <div
-              className="progress"
-              style={{
-                width: `${((currentQuestion + 1) / quizData.length) * 100}%`,
-              }}
-            ></div>
-          </div>
+      <h2>Quiz</h2>
+      <p>Branch: {state.branch}</p>
+      <p>Semester: {state.semester}</p>
+      <p>Difficulty Level: {state.difficulty}</p>
+
+      <div className="question">
+        <h3>{questions[currentQuestionIndex].question}</h3>
+        <div className="options">
+          {questions[currentQuestionIndex].options.map((option, idx) => (
+            <label key={idx}>
+              <input
+                type="radio"
+                value={option}
+                name={`question${currentQuestionIndex}`}
+                onChange={(e) => handleOptionChange(e, currentQuestionIndex)}
+              />
+              {option}
+            </label>
+          ))}
         </div>
-      ) : (
-        <div className="result-box">
-          <h2>Quiz Finished!</h2>
-          <p>
-            Your score is {score}/{quizData.length}
-          </p>
-          <button className="restart-button" onClick={restartQuiz}>
-            Restart Quiz
-          </button>
-        </div>
+        <button
+          onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+          disabled={currentQuestionIndex === questions.length - 1}
+        >
+          Next
+        </button>
+      </div>
+
+      {currentQuestionIndex === questions.length - 1 && (
+        <button onClick={submitQuiz}>Submit Quiz</button>
       )}
     </div>
   );
 };
 
-export default QuizApp;
+export default Quiz;

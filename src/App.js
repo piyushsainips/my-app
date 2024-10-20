@@ -11,7 +11,8 @@ import WaitingScreen from './component/waiting';
 import Admin from './component/admit_login';
 import DashboardPage from './component/dashboard_page';
 import Profile from './component/profile';
-import QuizApp from './component/quiz';
+import Quiz from './component/quiz';
+import QuizPanel from './component/QuizPanel';
 // import {app} from './firebase';
 // import {getDatabase,ref,set} from 'firebase/database';
 
@@ -22,7 +23,6 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<StudentDashboard />} />
                 <Route path="/notes" element={<Notes />} />
-                {/* <Route path="/quiz" element={<Quiz />} /> */}
                 {/* <Route path="/chatbot" element={<Chatbot />} /> */}
                 <Route path="/login" element={<Login />} /> {/* Add the Login route */}
                 <Route path="/register" element={<RegisterPage />} />
@@ -30,7 +30,8 @@ const App = () => {
                 <Route path="/admin" element={<Admin />} /> {/* Add the Admin route */}
                 <Route path="/dashboard" element={<DashboardPage />} /> {/* Add the Dashboard route */}
                 <Route path="/profile" element={<Profile />} /> {/* Add the Profile route */}
-                <Route path="/quiz" element={<QuizApp />} /> {/* Add the Quiz route */}
+                <Route path="/Quiz" element={<Quiz />} /> {/* Add the Quiz route */}
+                <Route path="/QuizPanel" element={<QuizPanel />} /> {/* Add the Home route */}
 
             </Routes>
         </Router>
