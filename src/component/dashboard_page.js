@@ -2,36 +2,38 @@ import React, { useState, useCallback } from 'react';
 import './dashboard_page.css';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as databaseRef, push } from 'firebase/database';
-import { app } from './firebase'; // Import your Firebase initialization
-import Loading from './waiting1'; // Import the Loading component
-
+import { app } from './firebase'; 
+import Loading from './waiting1'; 
 
 const DashboardPage = () => {
   const [branch, setBranch] = useState('');
   const [semester, setSemester] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
+  const [videoFile, setVideoFile] = useState(null); 
+  const [youtubeURL, setYoutubeURL] = useState(''); // New state for YouTube URL
   const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false); 
 
-
-  // Branch and semester data structure
   const branches = {
-    'CSE': ['Physics', 'Into to C', 'BEE','Intro to CS','Engineering mathematics 1','Engineering mathematics 2','Chemistry','MEFA','M.E.','Environmental Eng.','DSA','C++','S.E.','Linux','AEM','D.E.','Python','Java','Discrete Mathematics','TOC','MPI','CC','DMW','DS','COA','ML','CN','OS','CD','DIP','NLP','ISS','IOT','AOA','GAI','Disaster Management','Deep Learning'],
-    'Mechanical': ['Thermodynamics', 'Fluid Mechanics', 'Machine Design'],
-    'Civil': ['Structural Engineering', 'Geotechnical Engineering', 'Transportation Engineering'],
-    'ECE': ['Circuit Theory', 'Electromagnetics', 'Control Systems'],
+    'CSE': ['Physics', 'Into to C', 'BEE', 'Engineering mathematics 1','Engineering mathematics 2','Chemistry','MEFA','M.E.','Environmental Eng.','DSA','C++','S.E.','Linux','AEM','D.E.','Python','Java','Discrete Mathematics','TOC','MPI','CC','DMW','DS','COA','ML','CN','OS','CD','DIP','NLP','ISS','IOT','AOA','GAI','Disaster Management','Deep Learning'],
+    'Mechanical': ['Thermodynamics', 'Fluid Mechanics'],
+    'Civil': ['Structural Engineering', 'Geotechnical Engineering'],
+    'ECE': ['Circuit Theory', 'Electromagnetics'],
   };
 
-  const semesters = [1, 2, 3, 4, 5, 6, 7, 8]; // Define semesters for selection
+  const semesters = [1, 2, 3, 4, 5, 6, 7, 8]; 
 
-  // Handle file drop (drag-and-drop)
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles.length) {
-      setFile(droppedFiles[0]);
+      if (droppedFiles[0].type === 'application/pdf') {
+        setFile(droppedFiles[0]);
+      } else if (droppedFiles[0].type.startsWith('video/')) {
+        setVideoFile(droppedFiles[0]);
+      }
       setMessage('');
     }
   }, []);
@@ -41,60 +43,83 @@ const DashboardPage = () => {
     e.stopPropagation();
   };
 
-  // Handle form submission and file upload to Firebase
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!branch || !semester || !subject || !file) {
-      setMessage('Please select branch, semester, subject, and upload a file.');
+    if (!(branch && semester && subject && (file || videoFile || youtubeURL))) {
+      setMessage('Please select branch, semester, subject, and upload a file or provide a YouTube link.');
       return;
     }
 
-    setIsLoading(true); // Show the loading screen
+    setIsLoading(true); 
 
     try {
-      const storage = getStorage(app); // Firebase Storage instance
-      const database = getDatabase(app); // Firebase Realtime Database instance
+      const storage = getStorage(app);
+      const database = getDatabase(app);
 
-      // Get the file name without the .pdf extension
-      const fileNameWithoutPdf = file.name.replace(/\.pdf$/, '');
-
-      // Reference for Firebase Storage (where file will be uploaded)
-      const fileRef = storageRef(storage, `notes/${branch}/semester_${semester}/${fileNameWithoutPdf}`);
-
-      // Upload file to Firebase Storage
-      await uploadBytes(fileRef, file);
-      const downloadURL = await getDownloadURL(fileRef);
-
-      // Store file metadata in Firebase Realtime Database
+      const fileUploadPromises = [];
       const notesRef = databaseRef(database, `notes/${branch}/semester_${semester}`);
-      await push(notesRef, {
-        name: file.name,
-        url: downloadURL,
-        timestamp: Date.now(),
-      });
 
-      setMessage('Notes uploaded successfully!');
+      // Upload notes (PDF)
+      if (file) {
+        const fileNameWithoutPdf = file.name.replace(/\.pdf$/, '');
+        const fileRef = storageRef(storage, `notes/${branch}/semester_${semester}/${fileNameWithoutPdf}`);
+        fileUploadPromises.push(uploadBytes(fileRef, file).then(() => getDownloadURL(fileRef)).then(downloadURL => {
+          return push(notesRef, {
+            name: file.name,
+            url: downloadURL,
+            type: 'pdf',
+            timestamp: Date.now(),
+          });
+        }));
+      }
+
+      // Upload video file
+      if (videoFile) {
+        const videoNameWithoutExt = videoFile.name.replace(/\.(mp4|mkv|avi)$/, '');
+        const videoRef = storageRef(storage, `videos/${branch}/semester_${semester}/${videoNameWithoutExt}`);
+        fileUploadPromises.push(uploadBytes(videoRef, videoFile).then(() => getDownloadURL(videoRef)).then(downloadURL => {
+          return push(notesRef, {
+            name: videoFile.name,
+            url: downloadURL,
+            type: 'video',
+            timestamp: Date.now(),
+          });
+        }));
+      }
+
+      // Upload YouTube URL
+      if (youtubeURL) {
+        fileUploadPromises.push(push(notesRef, {
+          name: `YouTube: ${subject}`,
+          url: youtubeURL,
+          type: 'youtube',
+          timestamp: Date.now(),
+        }));
+      }
+
+      await Promise.all(fileUploadPromises);
+      setMessage('Notes and videos uploaded successfully!');
       setBranch('');
       setSemester('');
       setSubject('');
       setFile(null);
+      setVideoFile(null);
+      setYoutubeURL(''); // Reset YouTube URL field
     } catch (error) {
       console.error('Error uploading file:', error);
       setMessage('Error uploading file. Please try again.');
     } finally {
-      setIsLoading(false); // Hide the loading screen after the process is done
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="dashboard-container1">
-      {/* Conditionally render the Loading component */}
-      {isLoading && <Loading message="Uploading notes, please wait..."/>}
-
-      <h2 className="up">Upload Notes</h2>
+      {isLoading && <Loading message="Uploading, please wait..."/>}
+      <h2 className="up">Upload Notes and Videos</h2>
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+      <div className="form-group">
           <label>Branch:</label>
           <select value={branch} onChange={(e) => setBranch(e.target.value)}>
             <option value="">Select Branch</option>
@@ -123,22 +148,29 @@ const DashboardPage = () => {
             ))}
           </select>
         </div>
-
         <div className="form-group">
           <label>Upload Notes (PDF only):</label>
-          <div
-            className="drop-zone"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-          >
-            {file ? <p>{file.name}</p> : <p>Drag & drop a file here or click to select one</p>}
-            <input
-              type="file"
-              accept=".pdf" // Restrict file input to PDF only
-              onChange={(e) => setFile(e.target.files[0])}
-              required
-            />
+          <div className="drop-zone" onDrop={handleDrop} onDragOver={handleDragOver}>
+            {file ? <p>{file.name}</p> : <p>Drag & drop a PDF file here</p>}
+            <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])}  />
           </div>
+        </div>
+
+        <div className="form-group">
+          <label>Upload Video Lectures (MP4/MKV/AVI):</label>
+          <div className="drop-zone" onDrop={handleDrop} onDragOver={handleDragOver}>
+            {videoFile ? <p>{videoFile.name}</p> : <p>Drag & drop a video file here</p>}
+            <input type="file" accept=".mp4, .mkv, .avi" onChange={(e) => setVideoFile(e.target.files[0])}  />
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Upload YouTube Video URL:</label>
+          <input
+            type="url"
+            placeholder="Enter YouTube video URL"
+            value={youtubeURL}
+            onChange={(e) => setYoutubeURL(e.target.value)}
+          />
         </div>
 
         <button type="submit" className="upload-btn">Upload</button>

@@ -1,13 +1,14 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import './notes.css';
-import { getDatabase, ref as databaseRef, get } from 'firebase/database'; // Firebase imports
-import { app } from './firebase'; // Import Firebase initialization
+import { getDatabase, ref as databaseRef, get } from 'firebase/database';
+import { app } from './firebase';
 
 function App() {
   const [branch, setBranch] = useState('');
   const [semester, setSemester] = useState('');
-  const [notes, setNotes] = useState(null);
-  const [pdfs, setPdfs] = useState([]); // State to hold the fetched PDF URLs
+  const [pdfs, setPdfs] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [youtubeVideos, setYoutubeVideos] = useState([]); // New state for YouTube links
 
   const branches = {
     CSE: "Computer Science Engineering",
@@ -18,74 +19,58 @@ function App() {
 
   const semesters = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  const notesData = {
-    CSE: {
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      // Add more subjects
-    },
-    ECE: {
-      1: ['Basic Electronics', 'Mathematics 1', 'Physics 1'],
-      2: ['Digital Logic Design', 'Mathematics 2', 'Physics 2'],
-      // Add more subjects
-    },
-    ME: {
-      1: ['Mathematics 1', 'Physics 1'],
-      2: ['Mathematics 2', 'Physics 2'],
-      // Add more subjects
-    },
-    CS: {
-      1: ['Mathematics 1', 'Physics 1'],
-      2: ['Mathematics 2', 'Physics 2'],
-      // Add more subjects
-    }
-  };
-
   const handleBranchChange = (e) => {
     setBranch(e.target.value);
     setSemester('');
-    setNotes(null);
-    setPdfs([]); // Reset PDF list when branch changes
+    setPdfs([]);
+    setVideos([]);
+    setYoutubeVideos([]); // Reset YouTube links when branch changes
   };
 
   const handleSemesterChange = (e) => {
     setSemester(e.target.value);
-    if (branch && notesData[branch][e.target.value]) {
-      setNotes(notesData[branch][e.target.value]);
-      fetchPdfs(branch, e.target.value); // Fetch PDFs when semester is selected
+    if (branch) {
+      fetchNotesAndVideos(branch, e.target.value);
     } else {
-      setNotes(null);
-      setPdfs([]); // Reset PDF list if no notes available
+      setPdfs([]);
+      setVideos([]);
+      setYoutubeVideos([]);
     }
   };
 
-  // Function to fetch PDFs from Firebase Realtime Database
-  const fetchPdfs = async (branch, semester) => {
-    const database = getDatabase(app); // Firebase database instance
+  const fetchNotesAndVideos = async (branch, semester) => {
+    const database = getDatabase(app);
     const notesRef = databaseRef(database, `notes/${branch}/semester_${semester}`);
-    // Database path for the notes
 
     try {
       const snapshot = await get(notesRef);
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const fetchedPdfs = Object.values(data).map((item) => ({
-          name: item.name,
-          url: item.url,
-        }));
+        const fetchedPdfs = [];
+        const fetchedVideos = [];
+        const fetchedYouTubeVideos = [];
+        Object.values(data).forEach(item => {
+          if (!item.type || item.type === 'pdf') {
+            fetchedPdfs.push({ name: item.name, url: item.url });
+          } else if (item.type === 'video') {
+            fetchedVideos.push({ name: item.name, url: item.url });
+          } else if (item.type === 'youtube') {
+            fetchedYouTubeVideos.push({ name: item.name, url: item.url });
+          }
+        });
         setPdfs(fetchedPdfs);
+        setVideos(fetchedVideos);
+        setYoutubeVideos(fetchedYouTubeVideos);
       } else {
-        setPdfs([]); // No PDFs found
+        setPdfs([]);
+        setVideos([]);
+        setYoutubeVideos([]);
       }
     } catch (error) {
-      console.error('Error fetching PDFs:', error);
+      console.error('Error fetching notes and videos:', error);
       setPdfs([]);
+      setVideos([]);
+      setYoutubeVideos([]);
     }
   };
 
@@ -96,7 +81,7 @@ function App() {
       </h1>
 
       <div className="container">
-        <h1 className="h1">Access Notes</h1>
+        <h1 className="h1">Access Notes and Videos</h1>
 
         <div className="form-group">
           <label htmlFor="branchSelect">Select Branch:</label>
@@ -122,17 +107,7 @@ function App() {
           </div>
         )}
 
-        {/* {notes && (
-          <div className="notes-section">
-            <h2>Notes for {branches[branch]},</h2>
-            <ul>
-              {notes.map((note, index) => (
-                <li key={index}>{note}</li>
-              ))}
-            </ul>
-          </div>
-        )} */}
-
+        {/* Display PDF notes */}
         {pdfs.length > 0 && (
           <div className="pdf-section">
             <h2>Notes for {branches[branch]}:</h2>
@@ -140,8 +115,7 @@ function App() {
               {pdfs.map((pdf, index) => (
                 <li key={index}>
                   <a className='url' href={pdf.url} target="_blank" rel="noopener noreferrer">
-                  {pdf.name.replace(/\.pdf$/, '')} {/* Remove the .pdf suffix from the name */}
-
+                    {pdf.name.replace(/\.pdf$/, '')}
                   </a>
                 </li>
               ))}
@@ -149,8 +123,39 @@ function App() {
           </div>
         )}
 
-        {!notes && semester && <p>No notes available for this selection.</p>}
-        {pdfs.length === 0 && semester && <p>No PDFs available for this selection.</p>}
+        {/* Display video lectures */}
+        {videos.length > 0 && (
+          <div className="video-section">
+            <h2>Video Lectures for {branches[branch]}:</h2>
+            <ul>
+              {videos.map((video, index) => (
+                <li key={index}>
+                  <a className='url' href={video.url} target="_blank" rel="noopener noreferrer">
+                    {video.name.replace(/\.(mp4|mkv|avi)$/, '')}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Display YouTube videos */}
+        {youtubeVideos.length > 0 && (
+          <div className="youtube-section">
+            <h2>YouTube Lectures for {branches[branch]}:</h2>
+            <ul>
+              {youtubeVideos.map((youtube, index) => (
+                <li key={index}>
+                  <a className='url' href={youtube.url} target="_blank" rel="noopener noreferrer">
+                    {youtube.name.replace('YouTube: ', '')}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {(!pdfs.length && !videos.length && !youtubeVideos.length) && semester && <p>No resources available for this selection.</p>}
       </div>
     </div>
   );
