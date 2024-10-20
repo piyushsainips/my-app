@@ -126,8 +126,8 @@ const Profile = () => {
             alt="Profile"
             className="profile-picture1"
           />
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
+          <h3 className="name1">{user.name.surname}</h3>
+          {/* <p>{user.email}</p> */}
           <button
             className="edit-btn1"
             onClick={() => {
