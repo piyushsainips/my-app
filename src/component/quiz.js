@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Pie } from "react-chartjs-2";  // Import the Pie chart component
+import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "./quiz.css";
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -28,27 +29,56 @@ const QuizApp = () => {
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
-  const [showProgress, setShowProgress] = useState(false);
-  const [userAnswers, setUserAnswers] = useState([]); 
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [skippedQuestions, setSkippedQuestions] = useState(0);
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [answerResults, setAnswerResults] = useState([]); // To store answer results
+
+  useEffect(() => {
+    if (timeLeft > 0 && !isFinished) {
+      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timerId);
+    } else if (timeLeft === 0 && !isFinished) {
+      handleSkipQuestion();
+    }
+  }, [timeLeft, isFinished]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
+    const isAnswerCorrect = option === quizData[currentQuestion].answer;
+    setIsCorrect(isAnswerCorrect);
+    
+    // Set answer results for pie chart
+    setAnswerResults([...answerResults, isAnswerCorrect ? "correct" : "incorrect"]);
+
+    if (isAnswerCorrect) {
+      setScore(score + 1);
+      navigator.vibrate(200);
+    }
+    
+    // Add a timeout to display blink effect and move to the next question
+    setTimeout(() => handleNextQuestion(), 1000);
   };
 
   const handleNextQuestion = () => {
-    const newUserAnswers = [...userAnswers];
-    newUserAnswers[currentQuestion] = {
-      question: quizData[currentQuestion].question,
-      selected: selectedOption,
-      correct: quizData[currentQuestion].answer,
-    };
-    setUserAnswers(newUserAnswers);
-
-    if (selectedOption === quizData[currentQuestion].answer) {
-      setScore(score + 1);
-    }
-
     setSelectedOption(null);
+    setIsCorrect(null);
+    setTimeLeft(20); // Reset timer for the next question
+
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      setIsFinished(true);
+    }
+  };
+
+  const handleSkipQuestion = () => {
+    setSkippedQuestions(skippedQuestions + 1);
+    setAnswerResults([...answerResults, "skipped"]);
+    setSelectedOption(null);
+    setIsCorrect(null);
+    setTimeLeft(20);
+
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
@@ -59,33 +89,34 @@ const QuizApp = () => {
   const restartQuiz = () => {
     setCurrentQuestion(0);
     setScore(0);
+    setSkippedQuestions(0);
+    setAnswerResults([]); // Reset answer results
     setIsFinished(false);
-    setShowProgress(false);
-    setUserAnswers([]);
+    setTimeLeft(20);
   };
 
-  const toggleProgress = () => {
-    setShowProgress(!showProgress);
+  const renderPieChart = () => {
+    const correctAnswers = answerResults.filter(result => result === "correct").length;
+    const incorrectAnswers = answerResults.filter(result => result === "incorrect").length;
+
+    const data = {
+      labels: ["Correct", "Incorrect", "Skipped"],
+      datasets: [
+        {
+          label: "Quiz Results",
+          data: [correctAnswers, incorrectAnswers, skippedQuestions],
+          backgroundColor: [
+            "#4caf50", // Green for correct answers
+            "#f44336", // Red for incorrect answers
+            "#ffeb3b"  // Yellow for skipped questions
+          ],
+        },
+      ],
+    };
+
+    return <Pie data={data} />;
   };
-
-  // Prepare pie chart data
-  const correctAnswers = score;
-  const incorrectAnswers = quizData.length - score;
-
-  const data = {
-    labels: ["Correct", "Incorrect"],
-    datasets: [
-      {
-        label: "Quiz Performance",
-        data: [correctAnswers, incorrectAnswers],
-        backgroundColor: ["#36A2EB", "#FF6384"],
-        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
-      },
-    ],
-  };
-
-  // Generate suggestions based on performance
-  const getSuggestions = () => {
+     const getSuggestions = () => {
     const percentageCorrect = (score / quizData.length) * 100;
     if (percentageCorrect === 100) {
       return "Excellent! You answered all the questions correctly. Keep up the great work!";
@@ -96,6 +127,7 @@ const QuizApp = () => {
     }
   };
 
+  
   return (
     <div className="quiz-container">
       {!isFinished ? (
@@ -104,12 +136,21 @@ const QuizApp = () => {
             Question {currentQuestion + 1}/{quizData.length}
           </h2>
           <h3 className="question">{quizData[currentQuestion].question}</h3>
+          
+          <div className="timer">
+            Time left: {timeLeft} seconds
+          </div>
+
           <div className="options">
             {quizData[currentQuestion].options.map((option) => (
               <button
                 key={option}
                 className={`option-button ${
-                  selectedOption === option ? "selected" : ""
+                  selectedOption === option 
+                    ? isCorrect === true 
+                      ? "correct-blink" 
+                      : "incorrect-blink"
+                    : ""
                 }`}
                 onClick={() => handleOptionClick(option)}
               >
@@ -142,42 +183,20 @@ const QuizApp = () => {
             Your score is {score}/{quizData.length}
           </p>
           <div className="result-controls">
-            <button className="progress-button" onClick={toggleProgress}>
-              {showProgress ? "Hide Progress" : "See Progress"}
-            </button>
             <button className="restart-button" onClick={restartQuiz}>
               Restart Quiz
             </button>
+            <button className="progress-button" onClick={renderPieChart}>
+              See Progress
+            </button>
           </div>
-          {showProgress && (
-            <div className="progress-details">
-              <h3>Your Progress:</h3>
-              <ul>
-                {userAnswers.map((answer, index) => (
-                  <li
-                    key={index}
-                    className={`answer-item ${
-                      answer.selected === answer.correct ? "correct" : "incorrect"
-                    }`}
-                  >
-                    <strong>Question {index + 1}: {answer.question}</strong>
-                    <br />
-                    <span>Your Answer: {answer.selected}</span>
-                    <br />
-                    <span>Correct Answer: {answer.correct}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="chart-container">
-                <h4>Performance Chart:</h4>
-                <Pie data={data} />
-              </div>
-              <div className="suggestions">
-                <h4>Suggestions:</h4>
-                <p>{getSuggestions()}</p>
-              </div>
-            </div>
-          )}
+          <div className="progress-details">
+            {renderPieChart()}
+          </div>
+          <div className="suggestion-box">
+            <h3>Suggestions:</h3>
+            <p>{getSuggestions()}</p>
+          </div>
         </div>
       )}
     </div>
@@ -185,4 +204,5 @@ const QuizApp = () => {
 };
 
 export default QuizApp;
+
 
