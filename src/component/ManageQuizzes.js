@@ -115,9 +115,9 @@ const ManageQuizzes = () => {
               }}
             />
           </div>
-          <button onClick={() => handleUpdate(quiz)}>Update Quiz</button>
+          <button onClick={() => handleUpdate(quiz)} className="updatequiz-btn">Update Quiz</button>
           <button onClick={() => handleDelete(quiz)} className="delete-btn">Delete Quiz</button>
-          <button onClick={handleUpload} className="upload-btn">Upload New Quiz</button>
+          <button onClick={handleUpload} className="uploadquiz-btn">Upload New Quiz</button>
         </div>
       ))}
       
