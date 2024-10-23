@@ -35,7 +35,8 @@ const App = () => {
                 <Route path="/dashboard" element={<DashboardPage />} /> {/* Add the Dashboard route */}
                 <Route path="/profile" element={<Profile />} /> {/* Add the Profile route */}
                 <Route path="/Quiz" element={<Quiz />} /> {/* Add the Quiz route */}
-                <Route path="/QuizPanel" element={<QuizPanel />} /> {/* Add the Home route */}                <Route path="/dashboardupdate" element={<DashboardUpdate />} /> {/* Add the Dashboard Update route */}
+                <Route path="/QuizPanel" element={<QuizPanel />} /> {/* Add the Home route */}                
+                <Route path="/dashboardupdate" element={<DashboardUpdate />} /> {/* Add the Dashboard Update route */}
                 <Route path="/uploadquiz" element={<UploadQuiz />} /> {/* Add the UploadQuiz route */}
                 <Route path="/managequiz" element={<ManageQuizzes />} /> {/* Add the UploadQuiz route */}
 

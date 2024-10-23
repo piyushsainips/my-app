@@ -109,7 +109,7 @@ function App() {
 
         {/* Display PDF notes */}
         {pdfs.length > 0 && (
-          <div className="pdf-section">
+          <div className="notes pdf-section">
             <h2>Notes for {branches[branch]}:</h2>
             <ul>
               {pdfs.map((pdf, index) => (
@@ -125,7 +125,7 @@ function App() {
 
         {/* Display video lectures */}
         {videos.length > 0 && (
-          <div className="video-section">
+          <div className="notes video-section">
             <h2>Video Lectures for {branches[branch]}:</h2>
             <ul>
               {videos.map((video, index) => (
@@ -141,7 +141,7 @@ function App() {
 
         {/* Display YouTube videos */}
         {youtubeVideos.length > 0 && (
-          <div className="youtube-section">
+          <div className="notes youtube-section">
             <h2>YouTube Lectures for {branches[branch]}:</h2>
             <ul>
               {youtubeVideos.map((youtube, index) => (
