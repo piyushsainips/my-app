@@ -18,6 +18,7 @@ import QuizPanel from './component/QuizPanel';
 import DashboardUpdate from './component/dashboardupdate';
 import UploadQuiz from './component/UploadQuiz';
 import ManageQuizzes from './component/ManageQuizzes';
+import Chatbot from './backend/chatbot';
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
                 <Route path="/dashboardupdate" element={<DashboardUpdate />} /> {/* Add the Dashboard Update route */}
                 <Route path="/uploadquiz" element={<UploadQuiz />} /> {/* Add the UploadQuiz route */}
                 <Route path="/managequiz" element={<ManageQuizzes />} /> {/* Add the UploadQuiz route */}
+                <Route path="/chatbot" element={<Chatbot />} /> {/* Add the Chatbot route */}
 
             </Routes>
         </Router>
