@@ -1,21 +1,17 @@
-/* quiz.css */
-
-/* General Styles */
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   margin: 0;
-  overflow-y: auto; /* Enable vertical scrolling */
-
 }
 
 .quiz-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -50,6 +46,16 @@ body {
   border-radius: 8px;
   margin-bottom: 20px;
 }
+.blink {
+  animation: blink-animation 0.5s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
 
 /* Options */
 .options {
@@ -121,6 +127,7 @@ body {
 
 /* Progress Bar */
 .progress-bar {
+
   background-color: #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
@@ -133,11 +140,15 @@ body {
   height: 100%;
 }
 
-/* Result Box */
 .result-box {
   padding: 20px;
   text-align: center;
+  max-height: 500px; /* Set a max height for the container */
+  overflow-y: auto;  /* Enable vertical scroll if content exceeds the height */
+  overflow-x: hidden; /* Disable horizontal scrolling */
+  box-sizing: border-box; /* Ensure padding is included in the container's height */
 }
+
 
 .result-box h2 {
   font-size: 2em;
@@ -147,7 +158,9 @@ body {
 
 .result-box p {
   font-size: 1.2em;
-  color: #555;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  color: #333;
   margin-bottom: 20px;
 }
 
@@ -173,16 +186,11 @@ body {
   background-color: #e67e22;
 }
 
-/* Progress Details for Pie Chart */
-.progress-details {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f0f4f7;
-  border-radius: 8px;
-}
 
-/* Mobile Responsiveness */
 @media screen and (max-width: 768px) {
+  .result-box{
+    height: 900px;
+  }
   .quiz-container {
     width: 90%;
     padding: 15px;
@@ -207,16 +215,44 @@ body {
   }
 }
 
-
-/* Scrollable container for see-progress */
 .progress-details {
+  display: flex;
+  background-color: #e9e3e3;
+  align-items: center;
   margin-top: 20px;
-  max-height: 300px; /* Set a fixed height for the section */
-  overflow-y: auto; /* Enable vertical scrolling */
-  padding-right: 10px; /* Add some padding for better UX */
+  flex-wrap: wrap; 
 }
 
-.suggestions {
+.chart-and-details {
+  display: flex;
+  height: 300px;
+  align-items: center;
+  gap: 60px; 
+  max-width: 800px;
+  width: 100%;
+}
+
+.chart-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 200px;
+  width: 200px;
+  font-size: 16px;
+  color: #333;
+}
+
+.chart-details p {
+  margin: 5px 0;
+}
+
+.chart-details strong {
+  color: #13ca19;
+}
+
+.suggestion-box {
   margin-top: 20px;
   padding: 15px;
   border-radius: 10px;
@@ -228,35 +264,30 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.suggestions h3 {
+.suggestion-box h3 {
   color: #4caf50; /* This can be customized to match the theme */
   font-size: 22px;
   margin-bottom: 10px;
 }
 
-.suggestions p {
+.suggestion-box p {
   font-size: 18px;
   color: #666;
 }
 
-.suggestions strong {
-  color: #4caf50;
+/* Responsive Design */
+@media (max-width: 600px) {
+  .chart-and-details {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  
+
+  .suggestion-box {
+    font-size: 16px;
+  }
 }
 
-.suggestions.high-performance {
-  background-color: #e0f7fa;
-}
-
-.suggestions.medium-performance {
-  background-color: #fff8e1;
-}
-
-.suggestions.low-performance {
-  background-color: #ffebee;
-}
-
-.suggestions p em {
-  font-style: italic;
-}
 
   
