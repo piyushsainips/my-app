@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { database } from './firebase';
-import { ref, onValue } from "firebase/database";
 import "./quiz.css";
-import { useLocation } from "react-router-dom";
+import warningSound from '../assest/warningSound.mp3';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const QuizApp = () => {
-  const location = useLocation();
-  const { branch, semester, difficulty } = location.state || {};
+const quizData = [
+  {
+    question: "Which planet is known as the Red Planet?",
+    options: ["Earth", "Mars", "Jupiter", "Venus"],
+    answer: "Mars",
+  },
+  {
+    question: "What is the capital of France?",
+    options: ["Berlin", "Madrid", "Paris", "Lisbon"],
+    answer: "Paris",
+  },
+  {
+    question: "Which element is found in all organic compounds?",
+    options: ["Hydrogen", "Oxygen", "Nitrogen", "Carbon"],
+    answer: "Carbon",
+  },
+];
 
-  const [quizData, setQuizData] = useState([]); // Quiz data state
+const QuizApp = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -20,52 +32,55 @@ const QuizApp = () => {
   const [timeLeft, setTimeLeft] = useState(20);
   const [skippedQuestions, setSkippedQuestions] = useState(0);
   const [isCorrect, setIsCorrect] = useState(null);
-  const [answerResults, setAnswerResults] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [answerResults, setAnswerResults] = useState([]); // To store answer results
+  const [isBlinking, setIsBlinking] = useState(false); // State for blinking effect
 
-  // Fetch quiz data based on branch, semester, and difficulty
+  // Sound effect
+  const audioRef = React.useRef(new Audio(warningSound));
+
   useEffect(() => {
-    if (branch && semester && difficulty) {
-      const quizRef = ref(database, `quizzes/${branch}/${semester}/${difficulty}`);
-      onValue(quizRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          setQuizData(Object.values(data)); // Convert the object to an array
+    if (timeLeft > 0 && !isFinished) {
+      const timerId = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+        // Check for 5 seconds left
+        if (timeLeft === 5) {
+          setIsBlinking(true); // Start blinking
+          audioRef.current.play(); // Play ticking sound
         }
-        setLoading(false); // Stop loading once data is fetched
-      });
-    }
-  }, [branch, semester, difficulty]);
-
-  // Timer Effect
-  useEffect(() => {
-    if (!isFinished && timeLeft > 0 && !loading) {
-      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      }, 1000);
       return () => clearTimeout(timerId);
-    } else if (timeLeft === 0 && !isFinished && !loading) {
+    } else if (timeLeft === 0 && !isFinished) {
       handleSkipQuestion();
+    } else {
+      setIsBlinking(false); // Stop blinking when question is completed
+      audioRef.current.pause(); // Stop ticking sound
+      audioRef.current.currentTime = 0; // Reset sound
     }
-  }, [timeLeft, isFinished, loading]);
+  }, [timeLeft, isFinished]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     const isAnswerCorrect = option === quizData[currentQuestion].answer;
     setIsCorrect(isAnswerCorrect);
-
+    
+    // Set answer results for pie chart
     setAnswerResults([...answerResults, isAnswerCorrect ? "correct" : "incorrect"]);
 
     if (isAnswerCorrect) {
       setScore(score + 1);
-      navigator.vibrate(200); // Vibration feedback
+      navigator.vibrate(200);
     }
-
+    
     setTimeout(() => handleNextQuestion(), 1000);
   };
 
   const handleNextQuestion = () => {
     setSelectedOption(null);
     setIsCorrect(null);
-    setTimeLeft(20); // Reset timer
+    setTimeLeft(20); // Reset timer for the next question
+    setIsBlinking(false); // Reset blinking
+    audioRef.current.pause(); // Stop ticking sound
+    audioRef.current.currentTime = 0; // Reset sound
 
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -80,6 +95,9 @@ const QuizApp = () => {
     setSelectedOption(null);
     setIsCorrect(null);
     setTimeLeft(20);
+    setIsBlinking(false); // Reset blinking
+    audioRef.current.pause(); // Stop ticking sound
+    audioRef.current.currentTime = 0; // Reset sound
 
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -92,27 +110,54 @@ const QuizApp = () => {
     setCurrentQuestion(0);
     setScore(0);
     setSkippedQuestions(0);
-    setAnswerResults([]);
+    setAnswerResults([]); // Reset answer results
     setIsFinished(false);
     setTimeLeft(20);
+    setIsBlinking(false); // Reset blinking
+    audioRef.current.pause(); // Stop ticking sound
+    audioRef.current.currentTime = 0; // Reset sound
   };
 
   const renderPieChart = () => {
-    const correctAnswers = answerResults.filter((result) => result === "correct").length;
-    const incorrectAnswers = answerResults.filter((result) => result === "incorrect").length;
+    const correctAnswers = answerResults.filter(result => result === "correct").length;
+    const incorrectAnswers = answerResults.filter(result => result === "incorrect").length;
+    const skipped = skippedQuestions;
 
     const data = {
       labels: ["Correct", "Incorrect", "Skipped"],
       datasets: [
         {
           label: "Quiz Results",
-          data: [correctAnswers, incorrectAnswers, skippedQuestions],
-          backgroundColor: ["#4caf50", "#f44336", "#ffeb3b"],
+          data: [correctAnswers, incorrectAnswers, skipped],
+          backgroundColor: [
+            "#4caf50", // Green for correct answers
+            "#f44336", // Red for incorrect answers
+            "#ffeb3b"  // Yellow for skipped questions
+          ],
+          hoverBackgroundColor: [
+            "#66bb6a",
+            "#ef5350",
+            "#ffee58"
+          ],
         },
       ],
     };
 
-    return <Pie data={data} />;
+    const totalQuestions = quizData.length;
+    const correctPercentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
+    const incorrectPercentage = ((incorrectAnswers / totalQuestions) * 100).toFixed(2);
+    const skippedPercentage = ((skipped / totalQuestions) * 100).toFixed(2);
+
+    return (
+      <div className="chart-and-details">
+        <Pie data={data} />
+        <div className="chart-details">
+          <p><strong>Correct:</strong> {correctAnswers} ({correctPercentage}%)</p>
+          <p><strong>Incorrect:</strong> {incorrectAnswers} ({incorrectPercentage}%)</p>
+          <p><strong>Skipped:</strong> {skipped} ({skippedPercentage}%)</p>
+        </div>
+      </div>
+    );
   };
 
   const getSuggestions = () => {
@@ -128,18 +173,14 @@ const QuizApp = () => {
 
   return (
     <div className="quiz-container">
-      {loading ? (
-        <div className="loading-screen">
-          <h2>Loading Quiz...</h2>
-        </div>
-      ) : !isFinished && quizData.length > 0 ? (
+      {!isFinished ? (
         <div className="quiz-box">
           <h2 className="question-number">
             Question {currentQuestion + 1}/{quizData.length}
           </h2>
           <h3 className="question">{quizData[currentQuestion].question}</h3>
-
-          <div className="timer">
+          
+          <div className={`timer ${isBlinking ? "blink" : ""}`}>
             Time left: {timeLeft} seconds
           </div>
 
@@ -148,9 +189,9 @@ const QuizApp = () => {
               <button
                 key={option}
                 className={`option-button ${
-                  selectedOption === option
-                    ? isCorrect === true
-                      ? "correct-blink"
+                  selectedOption === option 
+                    ? isCorrect === true 
+                      ? "correct-blink" 
                       : "incorrect-blink"
                     : ""
                 }`}
@@ -192,7 +233,9 @@ const QuizApp = () => {
               See Progress
             </button>
           </div>
-          <div className="progress-details">{renderPieChart()}</div>
+          <div className="progress-details">
+            {renderPieChart()}
+          </div>
           <div className="suggestion-box">
             <h3>Suggestions:</h3>
             <p>{getSuggestions()}</p>
