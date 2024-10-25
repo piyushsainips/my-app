@@ -97,6 +97,15 @@ const StudentDashboard = () => {
             navigate('/register');
         }, 1500);
     };
+    const handleloginClick = () => {
+        // Show waiting screen before navigating
+        setIsWaiting(true);
+        // Simulate loading time (e.g., 1.5 seconds)
+        setTimeout(() => {
+            setIsWaiting(false);
+            navigate('/login');
+        }, 1500);
+    };
 
     const handleProfileClick = () => {
         navigate('/profile'); // Navigate to the profile page
@@ -126,6 +135,7 @@ const StudentDashboard = () => {
             {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
                     <button className="register" onClick={handleRegisterClick}>Register</button>
+                    <button className="login" onClick={handleloginClick}>Login</button>
                 </div>
             )}
 
