@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useNavigate } from "react-router-dom";
 import "./quiz.css";
-import warningSound from '../assest/warningSound.mp3';
+import warningSound from '../assest/intro_music.mp3';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -32,8 +33,11 @@ const QuizApp = () => {
   const [timeLeft, setTimeLeft] = useState(20);
   const [skippedQuestions, setSkippedQuestions] = useState(0);
   const [isCorrect, setIsCorrect] = useState(null);
-  const [answerResults, setAnswerResults] = useState([]); // To store answer results
-  const [isBlinking, setIsBlinking] = useState(false); // State for blinking effect
+  const [answerResults, setAnswerResults] = useState([]);
+  const [isBlinking, setIsBlinking] = useState(false);
+
+  // Navigation
+  const navigate = useNavigate();
 
   // Sound effect
   const audioRef = React.useRef(new Audio(warningSound));
@@ -42,19 +46,18 @@ const QuizApp = () => {
     if (timeLeft > 0 && !isFinished) {
       const timerId = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
-        // Check for 5 seconds left
         if (timeLeft === 5) {
-          setIsBlinking(true); // Start blinking
-          audioRef.current.play(); // Play ticking sound
+          setIsBlinking(true);
+          audioRef.current.play();
         }
       }, 1000);
       return () => clearTimeout(timerId);
     } else if (timeLeft === 0 && !isFinished) {
       handleSkipQuestion();
     } else {
-      setIsBlinking(false); // Stop blinking when question is completed
-      audioRef.current.pause(); // Stop ticking sound
-      audioRef.current.currentTime = 0; // Reset sound
+      setIsBlinking(false);
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
   }, [timeLeft, isFinished]);
 
@@ -63,7 +66,6 @@ const QuizApp = () => {
     const isAnswerCorrect = option === quizData[currentQuestion].answer;
     setIsCorrect(isAnswerCorrect);
     
-    // Set answer results for pie chart
     setAnswerResults([...answerResults, isAnswerCorrect ? "correct" : "incorrect"]);
 
     if (isAnswerCorrect) {
@@ -77,10 +79,10 @@ const QuizApp = () => {
   const handleNextQuestion = () => {
     setSelectedOption(null);
     setIsCorrect(null);
-    setTimeLeft(20); // Reset timer for the next question
-    setIsBlinking(false); // Reset blinking
-    audioRef.current.pause(); // Stop ticking sound
-    audioRef.current.currentTime = 0; // Reset sound
+    setTimeLeft(20);
+    setIsBlinking(false);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
 
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -95,9 +97,9 @@ const QuizApp = () => {
     setSelectedOption(null);
     setIsCorrect(null);
     setTimeLeft(20);
-    setIsBlinking(false); // Reset blinking
-    audioRef.current.pause(); // Stop ticking sound
-    audioRef.current.currentTime = 0; // Reset sound
+    setIsBlinking(false);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
 
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -110,12 +112,12 @@ const QuizApp = () => {
     setCurrentQuestion(0);
     setScore(0);
     setSkippedQuestions(0);
-    setAnswerResults([]); // Reset answer results
+    setAnswerResults([]);
     setIsFinished(false);
     setTimeLeft(20);
-    setIsBlinking(false); // Reset blinking
-    audioRef.current.pause(); // Stop ticking sound
-    audioRef.current.currentTime = 0; // Reset sound
+    setIsBlinking(false);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
   };
 
   const renderPieChart = () => {
@@ -129,16 +131,8 @@ const QuizApp = () => {
         {
           label: "Quiz Results",
           data: [correctAnswers, incorrectAnswers, skipped],
-          backgroundColor: [
-            "#4caf50", // Green for correct answers
-            "#f44336", // Red for incorrect answers
-            "#ffeb3b"  // Yellow for skipped questions
-          ],
-          hoverBackgroundColor: [
-            "#66bb6a",
-            "#ef5350",
-            "#ffee58"
-          ],
+          backgroundColor: ["#4caf50", "#f44336", "#ffeb3b"],
+          hoverBackgroundColor: ["#66bb6a", "#ef5350", "#ffee58"],
         },
       ],
     };
@@ -175,9 +169,7 @@ const QuizApp = () => {
     <div className="quiz-container">
       {!isFinished ? (
         <div className="quiz-box">
-          <h2 className="question-number">
-            Question {currentQuestion + 1}/{quizData.length}
-          </h2>
+          <h2 className="question-number">Question {currentQuestion + 1}/{quizData.length}</h2>
           <h3 className="question">{quizData[currentQuestion].question}</h3>
           
           <div className={`timer ${isBlinking ? "blink" : ""}`}>
@@ -188,13 +180,11 @@ const QuizApp = () => {
             {quizData[currentQuestion].options.map((option) => (
               <button
                 key={option}
-                className={`option-button ${
-                  selectedOption === option 
-                    ? isCorrect === true 
-                      ? "correct-blink" 
-                      : "incorrect-blink"
-                    : ""
-                }`}
+                className={`option-button ${selectedOption === option 
+                  ? isCorrect === true 
+                    ? "correct-blink" 
+                    : "incorrect-blink"
+                  : ""}`}
                 onClick={() => handleOptionClick(option)}
               >
                 {option}
@@ -202,45 +192,34 @@ const QuizApp = () => {
             ))}
           </div>
           <div className="controls">
-            <button
-              className="next-button"
-              onClick={handleNextQuestion}
-              disabled={!selectedOption}
-            >
+            <button className="next-button" onClick={handleNextQuestion} disabled={!selectedOption}>
               {currentQuestion < quizData.length - 1 ? "Next" : "Submit"}
             </button>
           </div>
           <div className="progress-bar">
-            <div
-              className="progress"
-              style={{
-                width: `${((currentQuestion + 1) / quizData.length) * 100}%`,
-              }}
-            ></div>
+            <div className="progress" style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}></div>
           </div>
         </div>
       ) : (
         <div className="result-box">
-          <h2>Quiz Finished!</h2>
-          <p>
-            Your score is {score}/{quizData.length}
-          </p>
-          <div className="result-controls">
-            <button className="restart-button" onClick={restartQuiz}>
-              Restart Quiz
-            </button>
-            <button className="progress-button" onClick={renderPieChart}>
-              See Progress
-            </button>
-          </div>
-          <div className="progress-details">
-            {renderPieChart()}
-          </div>
-          <div className="suggestion-box">
-            <h3>Suggestions:</h3>
-            <p>{getSuggestions()}</p>
-          </div>
+        <button className="back-button" onClick={() => navigate("/")}>
+          Back
+        </button>
+        <h2>Quiz Finished!</h2>
+        <p>Your score is {score}/{quizData.length}</p>
+        <div className="result-controls">
+          <button className="restart-button" onClick={restartQuiz}>Restart Quiz</button>
+          <button className="progress-button" onClick={renderPieChart}>See Progress</button>
         </div>
+        <div className="progress-details">
+          {renderPieChart()}
+        </div>
+        <div className="suggestion-box">
+          <h3>Suggestions:</h3>
+          <p>{getSuggestions()}</p>
+        </div>
+      </div>
+      
       )}
     </div>
   );
