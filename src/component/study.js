@@ -10,7 +10,7 @@ import { } from 'firebase/storage'; // Firebase storage
 // Importing images from assets folder
 import notesIcon from '../assest/notes.jpeg'; // Correct path for Notes image
 import quizIcon from '../assest/quiz1.png'; // Correct path for Quiz image
-import chatbotIcon from '../assest/ai_chat.png'; // Correct path for Chatbot image
+import PYQIcon from '../assest/PYQ.jpg'; // Correct path for Chatbot image
 import profileIcon from '../assest/profile.jpeg'; // Profile icon
 
 // Import the WaitingScreen component
@@ -179,10 +179,10 @@ const StudentDashboard = () => {
                     </div>
 
                     <div className="option-card">
-                        <img src={chatbotIcon} alt="Chatbot Icon" className="option-icon" />
-                        <h3>Chatbot</h3>
-                        <p>Ask the chatbot any questions you have, and get instant help.</p>
-                        <button className="btn" onClick={() => navigate('/chatbot')}>Chat Now</button>
+                        <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
+                        <h3>PYQ</h3>
+                        <p>Get Previous Year Question Papers.</p>
+                        <button className="btn" onClick={() => navigate('/pyq')}>PYQ Papers</button>
                     </div>
                 </div>
             </div>

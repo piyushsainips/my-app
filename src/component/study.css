@@ -123,7 +123,7 @@
 }
 
 .option-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.2);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -134,11 +134,21 @@
     margin-bottom: 15px;
     transition: transform 0.3s;
 }
-
-.option-card:hover .option-icon {
-    transform: rotate(10deg);
+.option-icon1 {
+    width: 170px;
+    height: 120px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    transition: transform 0.3s;
 }
 
+
+.option-card:hover .option-icon {
+    transform: rotate(15deg);
+}
+.option-card:hover .option-icon1 {
+    transform: rotate(15deg);
+}
 /* Button styling for the options */
 .btn {
     background-color: #4CAF50;
