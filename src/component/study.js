@@ -182,7 +182,7 @@ const StudentDashboard = () => {
                         <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
                         <h3>PYQ</h3>
                         <p>Get Previous Year Question Papers.</p>
-                        <button className="btn" onClick={() => navigate('/pyq')}>PYQ Papers</button>
+                        <button className="btn" onClick={() => navigate('QuestionPaperList')}>PYQ Papers</button>
                     </div>
                 </div>
             </div>

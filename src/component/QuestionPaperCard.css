@@ -1,0 +1,60 @@
+/* Container styles */
+.question-paper-card {
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  /* Loaded animation */
+  .question-paper-card.loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Hover animation */
+  .question-paper-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Title styling */
+  .question-paper-card h3 {
+    font-size: 1.2em;
+    margin: 0 0 10px;
+    color: #2c3e50;
+  }
+  
+  /* Subject and year styling */
+  .question-paper-card p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  /* Download button styling */
+  .download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: #3498db;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 1px solid #3498db;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Download link hover effect */
+  .download-link:hover {
+    background: #3498db;
+    color: #fff;
+    box-shadow: 0px 4px 12px rgba(52, 152, 219, 0.3);
+    transform: translateY(-2px);
+  }
+  
