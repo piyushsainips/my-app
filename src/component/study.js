@@ -1,106 +1,112 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './study.css'; // Importing CSS for styling
-import logoutTune from '../assest/intro_music.mp3'; // Replace with the actual path to your audio file
+import './study.css';
+import logoutTune from '../assest/intro_music.mp3';
 
+import { getDatabase, ref, onValue } from 'firebase/database';
 
-import { } from 'firebase/database'; // Firebase database
-import { } from 'firebase/storage'; // Firebase storage
+import notesIcon from '../assest/notes.jpeg';
+import quizIcon from '../assest/quiz1.png';
+import PYQIcon from '../assest/PYQ.jpg';
+import profileIcon from '../assest/profile.jpeg';
+import notificationIcon from '../assest/notification.png';
 
-// Importing images from assets folder
-import notesIcon from '../assest/notes.jpeg'; // Correct path for Notes image
-import quizIcon from '../assest/quiz1.png'; // Correct path for Quiz image
-import PYQIcon from '../assest/PYQ.jpg'; // Correct path for Chatbot image
-import profileIcon from '../assest/profile.jpeg'; // Profile icon
-
-// Import the WaitingScreen component
 import WaitingScreen from './waiting';
 
 const StudentDashboard = () => {
-    const navigate = useNavigate(); // Initialize the navigate function
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-    const [studentName, setStudentName] = useState('Student'); // State for student name
-    const [isRegistered, setIsRegistered] = useState(false); // State to track registration status
-    const [showMenu, setShowMenu] = useState(false); // State to toggle profile dropdown menu
-    const [profilePhotoURL, setProfilePhotoURL] = useState(''); // State for profile photo URL
-    const [isWaiting, setIsWaiting] = useState(false); // State for waiting screen
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [studentName, setStudentName] = useState('Student');
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+    const [profilePhotoURL, setProfilePhotoURL] = useState('');
+    const [isWaiting, setIsWaiting] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
-    // Check if the user is logged in or registered
     useEffect(() => {
-        const token = localStorage.getItem('authToken'); // Example: storing a token
-        const name = localStorage.getItem('studentName'); // Fetch student name
-        const registered = localStorage.getItem('isRegistered'); // Check if user has registered
-        const profilePhoto = localStorage.getItem('profilePhotoURL'); // Fetch profile photo URL from localStorage
+        const token = localStorage.getItem('authToken');
+        const name = localStorage.getItem('studentName');
+        const registered = localStorage.getItem('isRegistered');
+        const profilePhoto = localStorage.getItem('profilePhotoURL');
 
-        setIsLoggedIn(!!token); // Update login status based on token presence
-        setIsRegistered(!!registered); // Check if user has registered
-        if (name) setStudentName(name); // Set student name if found
-        if (profilePhoto) setProfilePhotoURL(profilePhoto); // Set profile photo if found
+        setIsLoggedIn(!!token);
+        setIsRegistered(!!registered);
+        if (name) setStudentName(name);
+        if (profilePhoto) setProfilePhotoURL(profilePhoto);
 
-        // Event listener to clear registration data when the page is reloaded or closed
         window.addEventListener('beforeunload', handleBeforeUnload);
 
-        // Cleanup the event listener when component unmounts
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, []);
 
-    // Handle clearing registration data before the page unloads (reload/close)
+    useEffect(() => {
+        const db = getDatabase();
+        const notificationsRef = ref(db, 'notifications');
+
+        onValue(notificationsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const notificationsData = Object.values(snapshot.val());
+                setNotifications(notificationsData);
+                setUnreadCount(notificationsData.length); // Set unread count to the number of new notifications
+            }
+        });
+    }, []);
+
     const handleBeforeUnload = () => {
         localStorage.removeItem('isRegistered');
         localStorage.removeItem('studentName');
         localStorage.removeItem('authToken');
     };
+
     const handleLogout = () => {
-        const audio = new Audio(logoutTune); // Create a new Audio instance
-        audio.preload = 'auto'; // Preload the audio for instant playback
-        audio.play(); // Play the audio immediately
-    
-        // Show the waiting screen immediately
+        const audio = new Audio(logoutTune);
+        audio.preload = 'auto';
+        audio.play();
+
         setIsWaiting(true);
-    
-        // Simulate a delay before completing the logout process (e.g., 1.5 seconds)
+
         setTimeout(() => {
-            // Remove authToken and studentName from localStorage
             localStorage.removeItem('authToken');
             localStorage.removeItem('studentName');
-            
-            // Update state and navigate to the login page
-            setIsLoggedIn(false); // Set login status to false
-            setIsWaiting(false); // Hide the waiting screen
-            navigate('/login'); // Redirect to the login page
-        }, 5000); // Delay of 4 seconds
+
+            setIsLoggedIn(false);
+            setIsWaiting(false);
+            navigate('/login');
+        }, 5000);
     };
-    
-    
-    
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+        setUnreadCount(0); // Reset unread count on open
+    };
+
+    const handleNotificationClick = (notification) => {
+        navigate(notification.link);
+        setShowNotifications(false);
+    };
 
     const handleNotesClick = () => {
         if (isLoggedIn) {
-            navigate('/notes'); // Navigate to Notes if the user is logged in
+            navigate('/notes');
         } else {
-            navigate('/login'); // Redirect to Login if not logged in
+            navigate('/login');
         }
     };
 
-    // const handleLoginClick = () => {
-    //     navigate('/login'); // Navigate to the login page
-    // };
-
     const handleRegisterClick = () => {
-        // Show waiting screen before navigating
         setIsWaiting(true);
-        // Simulate loading time (e.g., 1.5 seconds)
         setTimeout(() => {
             setIsWaiting(false);
             navigate('/register');
         }, 1500);
     };
-    const handleloginClick = () => {
-        // Show waiting screen before navigating
+
+    const handleLoginClick = () => {
         setIsWaiting(true);
-        // Simulate loading time (e.g., 1.5 seconds)
         setTimeout(() => {
             setIsWaiting(false);
             navigate('/login');
@@ -108,45 +114,48 @@ const StudentDashboard = () => {
     };
 
     const handleProfileClick = () => {
-        navigate('/profile'); // Navigate to the profile page
+        navigate('/profile');
     };
 
-    
-
     const toggleMenu = () => {
-        setShowMenu(!showMenu); // Toggle the dropdown menu
+        setShowMenu(!showMenu);
     };
 
     const handleTitleClick = () => {
-        navigate('/'); // Navigate to home or the main dashboard page
+        navigate('/');
     };
 
     return (
         <>
-            {/* Show Waiting Screen if isWaiting is true */}
             {isWaiting && <WaitingScreen />}
-            
-            {/* Styled title at the top left */}
-            <h1 className="title" onClick={handleTitleClick}>
-                <span>Knowledge</span> <span className="hub">Hub</span>
-            </h1>
 
-            {/* Show Register button if user is not registered and not logged in */}
+            <div className="title-container">
+                <h1 className="title" onClick={handleTitleClick}>
+                    <span>Knowledge</span> <span className="hub">Hub</span>
+                </h1>
+            </div>
+
             {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
+                    <img
+                        src={notificationIcon}
+                        alt="Notifications"
+                        className="notification-icon-title"
+                        onClick={toggleNotifications}
+                    />
+                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                     <button className="register" onClick={handleRegisterClick}>Register</button>
-                    <button className="login" onClick={handleloginClick}>Login</button>
+                    <button className="login" onClick={handleLoginClick}>Login</button>
                 </div>
             )}
 
-            {/* Show Profile button if logged in */}
             {isLoggedIn && (
                 <div className="profile-container">
                     <img
-                        src={profilePhotoURL || profileIcon} // Use uploaded profile photo or fallback to default icon
+                        src={profilePhotoURL || profileIcon}
                         alt="Profile"
                         className="profile-icon"
-                        onClick={toggleMenu} // Toggle dropdown menu on click
+                        onClick={toggleMenu}
                     />
                     {showMenu && (
                         <div className="dropdown-menu">
@@ -154,15 +163,39 @@ const StudentDashboard = () => {
                             <button onClick={handleLogout}>Logout</button>
                         </div>
                     )}
+
+                    <img
+                        src={notificationIcon}
+                        alt="Notifications"
+                        className="notification-icon"
+                        onClick={toggleNotifications}
+                    />
+                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                    {showNotifications && (
+                        <div className="notifications-dropdown animated-dropdown">
+                            <h3>Notifications</h3>
+                            {notifications.length > 0 ? (
+                                notifications.map((notification, index) => (
+                                    <div
+                                        key={index}
+                                        className="notification-item"
+                                        onClick={() => handleNotificationClick(notification)}
+                                    >
+                                        <p>{notification.message}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No new notifications</p>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* Dashboard Content */}
             <div className="dashboard-container">
                 <h1>Welcome, {studentName}!</h1>
                 <h2>Select an option below to continue:</h2>
 
-                {/* Options for Notes, Quiz, and Chatbot */}
                 <div className="options-container">
                     <div className="option-card">
                         <img src={notesIcon} alt="Notes Icon" className="option-icon" />
