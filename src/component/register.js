@@ -6,13 +6,15 @@ import { getDatabase, ref, set } from 'firebase/database';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase Storage
 import Loading from './waiting1'; // Import the Loading component
 import logoutTune from '../assest/intro_music.mp3'; // Import the MP3 file
+import { get } from 'firebase/database';
+
 
 const RegisterPage = () => {
   const navigate = useNavigate(); // For navigation after successful registration
   const [formData, setFormData] = useState({
     name: '',
     surname: '',
-    email: '',
+    Roll_no: '',
     password: '',
     number: '',
     branch: '',
@@ -43,18 +45,31 @@ const RegisterPage = () => {
     let formErrors = {};
     if (!formData.name) formErrors.name = 'Name is required';
     if (!formData.surname) formErrors.surname = 'Surname is required';
-    if (!formData.email) formErrors.email = 'Email is required';
-    if (!formData.password) formErrors.password = 'Password is required';
+    if (!formData.number) formErrors.number = 'Phone number is required';
+      if (!formData.password) formErrors.password = 'Password is required';
     return formErrors;
   };
 
   const validateForm = () => {
     let formErrors = validateFirstSection();
     if (!formData.number) formErrors.number = 'Phone number is required';
+    if (!formData.Roll_no) {
+      formErrors.Roll_no = 'Roll_no is required';
+    } else if (!/^\d{7}$/.test(formData.Roll_no)) {
+      formErrors.Roll_no = 'Roll_no must be of 6 digits';
+    }
     if (!formData.branch) formErrors.branch = 'Branch is required';
     if (!formData.semester) formErrors.semester = 'Semester is required';
     return formErrors;
   };
+
+  const isRollNoUnique = async (rollNo) => {
+    const db = getDatabase(app);
+    const rollNoRef = ref(db, `students/${rollNo}`);
+    const snapshot = await get(rollNoRef);
+    return !snapshot.exists(); // Returns true if Roll_no is unique, false otherwise
+  };
+  
 
   const handleContinue = () => {
     const validationErrors = validateFirstSection();
@@ -73,7 +88,7 @@ const RegisterPage = () => {
     const db = getDatabase(app);
     const storage = getStorage(app);
 
-    const userId = formData.email.replace('.', '_'); // Use email as unique ID but replace "." to prevent key conflicts
+    const userId = formData.Roll_no
     let profilePhotoURL = '';
 
     if (formData.profilePhoto) {
@@ -85,7 +100,7 @@ const RegisterPage = () => {
     await set(ref(db, `students/${userId}`), {
       name: formData.name,
       surname: formData.surname,
-      email: formData.email,
+      Roll_no: formData.Roll_no,
       password: formData.password,
       number: formData.number,
       branch: formData.branch,
@@ -103,14 +118,21 @@ const RegisterPage = () => {
     const audio = new Audio(logoutTune); // Play the MP3 audio
     audio.loop = true; // Loop the audio until process finishes
     audio.preload = 'auto'; // Preload the audio for instant playback
-    audio.play(); // Play the sound
-
+    
     try {
+      audio.play(); // Play the sound
+      const isUnique = await isRollNoUnique(formData.Roll_no);
+      if (!isUnique) {
+        setErrors({ Roll_no: 'This Roll_no is already in use.' });
+        setIsLoading(false); // Hide loading screen
+        return;
+      }
+
       await registerUserInDatabase(); // Register the user in the database
       localStorage.setItem('studentName', formData.name);
       localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
       localStorage.setItem('isRegistered', 'true'); // Mark user as registered
-      localStorage.setItem('studentEmail', formData.email);
+      localStorage.setItem('studentRoll_no', formData.Roll_no);
 
       audio.pause(); // Stop the audio when registration is successful
       navigate('/'); // Navigate to the dashboard after successful registration
@@ -160,15 +182,15 @@ const RegisterPage = () => {
               {errors.surname && <span className="error">{errors.surname}</span>}
             </div>
             <div className="form-group1">
-              <label>Email</label>
+              <label>Phone Number</label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                name="number"
+                value={formData.number}
                 onChange={handleChange}
-                placeholder="Enter your email"
+                placeholder="Enter your phone number"
               />
-              {errors.email && <span className="error">{errors.email}</span>}
+              {errors.number && <span className="error">{errors.number}</span>}
             </div>
             <div className="form-group1">
               <label>Password</label>
@@ -187,15 +209,15 @@ const RegisterPage = () => {
           <div className="second-section">
             {/* Second section fields */}
             <div className="form-group1">
-              <label>Phone Number</label>
+              <label>Roll_no</label>
               <input
                 type="text"
-                name="number"
-                value={formData.number}
+                name="Roll_no"
+                value={formData.Roll_no}
                 onChange={handleChange}
-                placeholder="Enter your phone number"
+                placeholder="Enter your Roll_no"
               />
-              {errors.number && <span className="error">{errors.number}</span>}
+              {errors.Roll_no && <span className="error">{errors.Roll_no}</span>}
             </div>
             <div className="form-group1">
               <label>Branch</label>

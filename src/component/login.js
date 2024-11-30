@@ -7,24 +7,24 @@ import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'
 
 const Login = () => {
     const navigate = useNavigate(); // Initialize the navigate function
-    const [email, setEmail] = useState('');
+    const [Roll_no, setRoll_no] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false); // Loading state
     const [success, setSuccess] = useState(false); // Success state
 
-    // Email validation function
-    const isValidEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
+    // Roll_no validation function
+    const isValidRoll_no = (Roll_no) => {
+        return /\S/.test(Roll_no);
     };
 
-    // Fetch user data from Firebase by email
-    const fetchUserData = async (email) => {
+    // Fetch user data from Firebase by Roll_no
+    const fetchUserData = async (Roll_no) => {
         const dbRef = ref(getDatabase(app)); // Get the database reference
         try {
-            // Replace "." in the email to match the database key format
-            const emailKey = email.replace('.', '_');
-            const snapshot = await get(child(dbRef, `students/${emailKey}`));
+            // Replace "." in the Roll_no to match the database key format
+            const Roll_noKey = Roll_no;
+            const snapshot = await get(child(dbRef, `students/${Roll_noKey}`));
 
             if (snapshot.exists()) {
                 return snapshot.val(); // Return the user data if found
@@ -39,11 +39,11 @@ const Login = () => {
     };
 
     // Fetch profile photo URL from Firebase Storage
-    const fetchProfilePhoto = async (email) => {
+    const fetchProfilePhoto = async (Roll_no) => {
         const storage = getStorage(app);
-        const emailKey = email.replace('.', '_');
+        const Roll_noKey = Roll_no;
         try {
-            const profilePhotoRef = storageRef(storage, `profilePhotos/${emailKey}`);
+            const profilePhotoRef = storageRef(storage, `profilePhotos/${Roll_noKey}`);
             const url = await getDownloadURL(profilePhotoRef);
             return url;
         } catch (error) {
@@ -61,14 +61,14 @@ const Login = () => {
         setSuccess(false);
 
         // Basic validation for empty fields
-        if (email === '' || password === '') {
+        if (Roll_no === '' || password === '') {
             setError('Both fields are required.');
             return;
         }
 
-        // Email validation
-        if (!isValidEmail(email)) {
-            setError('Please enter a valid email.');
+        // Roll_no validation
+        if (!isValidRoll_no(Roll_no)) {
+            setError('Please enter a valid Roll_no.');
             return;
         }
 
@@ -76,7 +76,7 @@ const Login = () => {
         setLoading(true);
 
         // Fetch the user data from Firebase
-        const userData = await fetchUserData(email);
+        const userData = await fetchUserData(Roll_no);
 
         setLoading(false); // Stop loading after the Firebase query completes
 
@@ -84,12 +84,12 @@ const Login = () => {
             // Check if the password matches
             if (password === userData.password) {
                 // Fetch profile photo
-                const profilePhotoURL = await fetchProfilePhoto(email);
+                const profilePhotoURL = await fetchProfilePhoto(Roll_no);
 
                 // Store necessary details in localStorage
                 localStorage.setItem('authToken', 'example_token'); // Simulate token generation
                 localStorage.setItem('studentName', userData.name);
-                localStorage.setItem('studentEmail', email);
+                localStorage.setItem('studentRoll_no', Roll_no);
                 localStorage.setItem('profilePhotoURL', profilePhotoURL || '');
 
                 setSuccess(true);
@@ -100,10 +100,10 @@ const Login = () => {
                 navigate('/'); // Redirect to the study page on successful login
 
             } else {
-                setError('Invalid email or password.');
+                setError('Invalid Roll_no or password.');
             }
         } else {
-            setError('Invalid email or password.');
+            setError('Invalid Roll_no or password.');
         }
     };
 
@@ -116,12 +116,12 @@ const Login = () => {
                 {success && <p className="success-message">Login successful!</p>}
 
                 <div className={`form-group ${error ? 'input-error' : ''}`}>
-                    <label>Email:</label>
+                    <label>Roll_no:</label>
                     <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
+                        type="text"
+                        value={Roll_no}
+                        onChange={(e) => setRoll_no(e.target.value)}
+                        placeholder="Enter your Roll_no"
                         required
                     />
                 </div>

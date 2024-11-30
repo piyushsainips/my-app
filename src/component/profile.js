@@ -9,7 +9,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [user, setUser] = useState({
     name: "",
-    email: "",
+    Roll_no: "",
     phone_no: "",
     branch: "",
     surname: "",
@@ -26,9 +26,9 @@ const Profile = () => {
         const db = getDatabase(app);
         const storage = getStorage(app);
         
-        // Assuming the user is identified by their email stored in localStorage
-        const userEmail = localStorage.getItem('studentEmail');
-        const userId = userEmail.replace('.', '_'); // Convert email to Firebase-friendly format
+        // Assuming the user is identified by their Roll_no stored in localStorage
+        const userRoll_no = localStorage.getItem('studentRoll_no');
+        const userId = userRoll_no;
 
         // Fetch user data from the Realtime Database
         const userRef = ref(db, `students/${userId}`);
@@ -38,7 +38,7 @@ const Profile = () => {
           const userData = userSnapshot.val();
           setUser({
             name: userData.name,
-            email: userData.email,
+            Roll_no: userData.Roll_no,
             phone_no: userData.number || "", // Default to empty string if data is missing
             branch: userData.branch || "",
             surname: userData.surname || "",
@@ -76,8 +76,8 @@ const Profile = () => {
       setIsLoading(true); // Show loading state while saving
       const db = getDatabase(app);
       const storage = getStorage(app);
-      const userEmail = localStorage.getItem('studentEmail');
-      const userId = userEmail.replace('.', '_');
+      const userRoll_no = localStorage.getItem('studentRoll_no');
+      const userId = userRoll_no;
 
       // If there's a new profile photo, upload it to Firebase Storage
       let profilePhotoURL = user.profilePhotoURL;
@@ -127,7 +127,7 @@ const Profile = () => {
             className="profile-picture1"
           />
           <h3 className="name1">{user.name.surname}</h3>
-          {/* <p>{user.email}</p> */}
+          {/* <p>{user.Roll_no}</p> */}
           <button
             className="edit-btn1"
             onClick={() => {
@@ -242,9 +242,9 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="email-section1">
-          <h4>My Email Address</h4>
-          <p>{user.email}</p>
+        <div className="Roll_no-section1">
+          <h4>My Roll_no</h4>
+          <p>{user.Roll_no}</p>
         </div>
 
       </div>
