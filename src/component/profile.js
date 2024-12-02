@@ -3,6 +3,7 @@ import { getDatabase, ref, get, update } from "firebase/database"; // Import the
 import { getStorage, ref as storageRef, getDownloadURL, uploadBytes } from "firebase/storage";
 import { app } from './firebase'; // Firebase configuration
 import "./profile.css"; // Assuming you have some CSS to style this
+import Loading from "./waiting1";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -111,7 +112,7 @@ const Profile = () => {
   };
 
   if (isLoading) {
-    return <div>Loading profile...</div>;
+    return <Loading/>;
   }
 
   return (
