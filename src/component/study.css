@@ -301,6 +301,13 @@
     top: 20px;
     right: 20px;
 }
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+}
+
 
 /* Notification icon styling */
 .notification-icon-title {
@@ -339,35 +346,30 @@
 }
 .notification-badge {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
+    top: 5px;
+    right: 5px;
+    background-color: #ff4d4d;
     color: white;
-    border-radius: 50%;
-    padding: 5px 10px;
     font-size: 12px;
-    font-weight: bold;
-    z-index: 10;
-    /* Make sure the badge does not affect the icon size */
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;   /* Make sure the badge does not affect the icon size */
 }
 
 
 .notifications-dropdown {
     position: absolute;
-    top: 50px;
-    right: 0;
-    width: 250px;
-    background-color: white;
+    top: 60px;
+    right: 10px;
+    background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 10;
-    padding: 10px;
-    animation: slideDown 0.3s ease-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
 }
-
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -382,6 +384,50 @@
 
 .notification-item:hover {
     background-color: #f5f5f5;
+}
+.notifications-dropdown h3 {
+    margin: 0;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.notification-item {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.notification-item:hover {
+    background-color: #f9f9f9;
+}
+.notification-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    flex: 1;
+    word-wrap: break-word;
+}
+.notifications-dropdown p {
+    text-align: center;
+    color: #999;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
     

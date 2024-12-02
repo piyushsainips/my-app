@@ -25,13 +25,7 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        // if (!token) {
-        //     // If no token exists, redirect to login
-        //     navigate('/login');
-        //     return;
-        // }
-
-        const studentId = localStorage.getItem('studentRoll_no'); // Assuming you store student ID in localStorage
+        const studentId = localStorage.getItem('studentRoll_no');
         if (!studentId) return;
 
         const name = localStorage.getItem('studentName');
@@ -44,7 +38,6 @@ const StudentDashboard = () => {
         if (profilePhoto) setProfilePhotoURL(profilePhoto);
 
         window.addEventListener('beforeunload', handleBeforeUnload);
-
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
@@ -55,13 +48,13 @@ const StudentDashboard = () => {
         if (!studentId) return;
 
         const db = getDatabase();
-        const notificationsRef = ref(db, `notifications/${studentId}`); // Fetch notifications for the logged-in student
+        const notificationsRef = ref(db, `notifications/${studentId}`);
 
         onValue(notificationsRef, (snapshot) => {
             if (snapshot.exists()) {
                 const notificationsData = Object.values(snapshot.val());
                 setNotifications(notificationsData);
-                setUnreadCount(notificationsData.filter(notification => !notification.read).length); // Filter unread notifications
+                setUnreadCount(notificationsData.filter(notification => !notification.read).length);
             }
         });
     }, []);
@@ -80,10 +73,7 @@ const StudentDashboard = () => {
         setIsWaiting(true);
 
         setTimeout(() => {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('studentName');
-            localStorage.removeItem('studentRoll_no'); // Clear studentId on logout
-
+            localStorage.clear();
             setIsLoggedIn(false);
             setIsWaiting(false);
             navigate('/login');
@@ -92,74 +82,39 @@ const StudentDashboard = () => {
 
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
-        setUnreadCount(0); // Reset unread count on open
+        setUnreadCount(0);
     };
 
     const handleNotificationClick = (notification) => {
-        // Mark notification as read in the database
-        const studentId = localStorage.getItem('studentId');
+        const studentId = localStorage.getItem('studentRoll_no');
         const db = getDatabase();
         const notificationRef = ref(db, `notifications/${studentId}/${notification.id}`);
         set(notificationRef, { ...notification, read: true });
 
-        // Navigate to the linked page
         navigate(notification.link);
         setShowNotifications(false);
     };
 
-    const handleNotesClick = () => {
-        if (isLoggedIn) {
-            navigate('/notes');
-        } else {
-            navigate('/login');
-        }
-    };
-
-    const handleRegisterClick = () => {
-        setIsWaiting(true);
-        setTimeout(() => {
-            setIsWaiting(false);
-            navigate('/register');
-        }, 1500);
-    };
-
-    const handleLoginClick = () => {
-        setIsWaiting(true);
-        setTimeout(() => {
-            setIsWaiting(false);
-            navigate('/login');
-        }, 1500);
-    };
-
-    const handleProfileClick = () => {
-        navigate('/profile');
-    };
-
-    const toggleMenu = () => {
-        setShowMenu(!showMenu);
-    };
-
-    const handleTitleClick = () => {
-        navigate('/');
-    };
+    const handleNotesClick = () => navigate(isLoggedIn ? '/notes' : '/login');
+    const handleRegisterClick = () => navigate('/register');
+    const handleLoginClick = () => navigate('/login');
+    const handleProfileClick = () => navigate('/profile');
+    const toggleMenu = () => setShowMenu(!showMenu);
 
     return (
         <>
             {isWaiting && <WaitingScreen />}
-
             <div className="title-container">
-                <h1 className="title" onClick={handleTitleClick}>
+                <h1 className="title" onClick={() => navigate('/')}>
                     <span>Knowledge</span> <span className="hub">Hub</span>
                 </h1>
             </div>
-
             {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
                     <button className="register" onClick={handleRegisterClick}>Register</button>
                     <button className="login" onClick={handleLoginClick}>Login</button>
                 </div>
             )}
-
             {isLoggedIn && (
                 <div className="profile-container">
                     <img
@@ -174,7 +129,6 @@ const StudentDashboard = () => {
                             <button onClick={handleLogout}>Logout</button>
                         </div>
                     )}
-
                     <img
                         src={notificationIcon}
                         alt="Notifications"
@@ -183,7 +137,7 @@ const StudentDashboard = () => {
                     />
                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                     {showNotifications && (
-                        <div className="notifications-dropdown animated-dropdown">
+                        <div className="notifications-dropdown">
                             <h3>Notifications</h3>
                             {notifications.length > 0 ? (
                                 notifications.map((notification, index) => (
@@ -202,11 +156,9 @@ const StudentDashboard = () => {
                     )}
                 </div>
             )}
-
             <div className="dashboard-container">
                 <h1>Welcome, {studentName}!</h1>
                 <h2>Select an option below to continue:</h2>
-
                 <div className="options-container">
                     <div className="option-card">
                         <img src={notesIcon} alt="Notes Icon" className="option-icon" />
@@ -214,14 +166,12 @@ const StudentDashboard = () => {
                         <p>Access your study materials, lecture notes, and resources here.</p>
                         <button className="btn" onClick={handleNotesClick}>Go to Notes</button>
                     </div>
-
                     <div className="option-card">
                         <img src={quizIcon} alt="Quiz Icon" className="option-icon" />
                         <h3>Quiz</h3>
                         <p>Test your knowledge by taking quizzes on various subjects.</p>
                         <button className="btn" onClick={() => navigate('/QuizPanel')}>Start Quiz</button>
                     </div>
-
                     <div className="option-card">
                         <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
                         <h3>PYQ</h3>
@@ -235,7 +185,3 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
-
-
-
-
