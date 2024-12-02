@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import './dashboard_page.css';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as databaseRef, push } from 'firebase/database';
+import { getDatabase, ref as databaseRef, push,get } from 'firebase/database';
 import { app } from './firebase'; 
 import Loading from './waiting1'; 
 
@@ -98,6 +98,28 @@ const DashboardPage = () => {
       }
 
       await Promise.all(fileUploadPromises);
+      // Fetch students in the same branch and semester
+      const studentsRef = databaseRef(database, `students`);
+      const studentsSnapshot = await get(studentsRef);
+  
+      if (studentsSnapshot.exists()) {
+        const students = studentsSnapshot.val();
+        const notificationPromises = [];
+        
+        Object.keys(students).forEach((studentId) => {
+          const student = students[studentId];
+          if (student.branch.toLowerCase() === branch.toLowerCase() && student.semester === semester) {
+            // Store the notification in the database for that student
+            const notificationsRef = databaseRef(database, `notifications/${studentId}`);
+            notificationPromises.push(push(notificationsRef, {
+              message: `New notes or videos uploaded for ${subject} in ${branch}, Semester ${semester}.`,
+              timestamp: Date.now(),
+            }));
+          }
+        });
+
+        await Promise.all(notificationPromises);
+      }
       setMessage('Notes and videos uploaded successfully!');
       setBranch('');
       setSemester('');

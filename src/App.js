@@ -20,6 +20,8 @@ import UploadQuiz from './component/UploadQuiz';
 import ManageQuizzes from './component/ManageQuizzes';
 import Chatbot from './backend/chatbot';
 import QuestionPaperList from "./component/QuestionPaperList";
+import UploadQuestionPaper from "./component/questionpaperupload";
+
 
 const App = () => {
     return (
@@ -42,6 +44,8 @@ const App = () => {
                 <Route path="/managequiz" element={<ManageQuizzes />} /> {/* Add the UploadQuiz route */}
                 <Route path="/chatbot" element={<Chatbot />} /> {/* Add the Chatbot route */}
                 <Route path="/QuestionPaperList" element={<QuestionPaperList />}/>
+                <Route path="/uploadquestionpaper" element={<UploadQuestionPaper />}/>
+                
 
             </Routes>
         </Router>

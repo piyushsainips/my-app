@@ -10,7 +10,6 @@ import quizIcon from '../assest/quiz1.png';
 import PYQIcon from '../assest/PYQ.jpg';
 import profileIcon from '../assest/profile.jpeg';
 import notificationIcon from '../assest/notification.png';
-
 import WaitingScreen from './waiting';
 
 const StudentDashboard = () => {
@@ -137,13 +136,7 @@ const StudentDashboard = () => {
 
             {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
-                    <img
-                        src={notificationIcon}
-                        alt="Notifications"
-                        className="notification-icon-title"
-                        onClick={toggleNotifications}
-                    />
-                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                    
                     <button className="register" onClick={handleRegisterClick}>Register</button>
                     <button className="login" onClick={handleLoginClick}>Login</button>
                 </div>
@@ -211,6 +204,7 @@ const StudentDashboard = () => {
                         <button className="btn" onClick={() => navigate('/QuizPanel')}>Start Quiz</button>
                     </div>
 
+
                     <div className="option-card">
                         <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
                         <h3>PYQ</h3>
@@ -224,3 +218,4 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
+

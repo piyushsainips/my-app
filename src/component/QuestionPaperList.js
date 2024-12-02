@@ -1,29 +1,46 @@
 import React, { useState, useEffect } from "react";
-import questionPapers from "./data";
+import { getDatabase, ref, onValue } from "firebase/database";
 import QuestionPaperCard from "./QuestionPaperCard";
 import "./QuestionPaperList.css";
 
 const QuestionPaperList = () => {
   const [search, setSearch] = useState("");
   const [year, setYear] = useState("");
+  const [questionPapers, setQuestionPapers] = useState([]);
   const [filteredPapers, setFilteredPapers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    // Simulate a slight delay to show loading spinner
-    const timer = setTimeout(() => {
-      const results = questionPapers.filter((paper) => {
-        return (
-          paper.title.toLowerCase().includes(search.toLowerCase()) &&
-          (year === "" || paper.year === year)
-        );
-      });
-      setFilteredPapers(results);
+    const database = getDatabase();
+    const papersRef = ref(database, "questionPapers");
+
+    // Fetch data from Firebase Realtime Database
+    const unsubscribe = onValue(papersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const papersArray = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setQuestionPapers(papersArray);
+      } else {
+        setQuestionPapers([]);
+      }
       setLoading(false);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [search, year]);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Apply search and filter
+  useEffect(() => {
+    const results = questionPapers.filter((paper) =>
+      paper.title.toLowerCase().includes(search.toLowerCase()) &&
+      (year === "" || paper.year === year)
+    );
+    setFilteredPapers(results);
+  }, [search, year, questionPapers]);
 
   return (
     <div className="question-paper-list">
