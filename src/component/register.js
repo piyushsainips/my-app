@@ -19,8 +19,7 @@ const RegisterPage = () => {
     number: '',
     branch: '',
     semester: '',
-    college: '', // New field for college
-    profilePhoto: null // Field for profile photo
+    profilePhoto: null // New field for profile photo
   });
 
   const [errors, setErrors] = useState({}); // For form validation
@@ -61,7 +60,6 @@ const RegisterPage = () => {
     }
     if (!formData.branch) formErrors.branch = 'Branch is required';
     if (!formData.semester) formErrors.semester = 'Semester is required';
-    if (!formData.college) formErrors.college = 'College is required'; // Validate college
     return formErrors;
   };
 
@@ -107,18 +105,16 @@ const RegisterPage = () => {
       number: formData.number,
       branch: formData.branch,
       semester: formData.semester,
-      college: formData.college, // Save college in the database
       profilePhotoURL // Store the profile photo URL
     });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length === 0) {
-      setIsLoading(true); // Show loading screen
+  e.preventDefault();
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length === 0) {
+    setIsLoading(true); // Show loading screen
 
-<<<<<<< Updated upstream
     const audio = new Audio(logoutTune); // Play the MP3 audio
     audio.loop = true; // Loop the audio until process finishes
     audio.preload = 'auto'; // Preload the audio for instant playback
@@ -137,33 +133,21 @@ const RegisterPage = () => {
       localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
       localStorage.setItem('isRegistered', 'true'); // Mark user as registered
       localStorage.setItem('studentRoll_no', formData.Roll_no);
-=======
-      const audio = new Audio(logoutTune); // Play the MP3 audio
-      audio.loop = true; // Loop the audio until process finishes
-      audio.preload = 'auto'; // Preload the audio for instant playback
-      audio.play(); // Play the sound
 
-      try {
-        await registerUserInDatabase(); // Register the user in the database
-        localStorage.setItem('studentName', formData.name);
-        localStorage.setItem('authToken', 'yourAuthTokenHere'); // Simulating login token
-        localStorage.setItem('isRegistered', 'true'); // Mark user as registered
-        localStorage.setItem('studentEmail', formData.email);
->>>>>>> Stashed changes
-
-        audio.pause(); // Stop the audio when registration is successful
-        navigate('/'); // Navigate to the dashboard after successful registration
-      } catch (error) {
-        console.error("Error during registration:", error);
-        setErrors({ submit: "Registration failed. Please try again." });
-      } finally {
-        audio.pause(); // Stop the audio regardless of success or failure
-        setIsLoading(false); // Hide loading screen
-      }
-    } else {
-      setErrors(validationErrors); // Show validation errors
+      audio.pause(); // Stop the audio when registration is successful
+      navigate('/'); // Navigate to the dashboard after successful registration
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setErrors({ submit: "Registration failed. Please try again." });
+    } finally {
+      audio.pause(); // Stop the audio regardless of success or failure
+      setIsLoading(false); // Hide loading screen
     }
-  };
+  } else {
+    setErrors(validationErrors); // Show validation errors
+  }
+};
+
 
   return (
     <div className="register-container">
@@ -256,17 +240,6 @@ const RegisterPage = () => {
                 placeholder="Enter your semester"
               />
               {errors.semester && <span className="error">{errors.semester}</span>}
-            </div>
-            <div className="form-group1">
-              <label>College Id</label>
-              <input
-                type="text"
-                name="college"
-                value={formData.college}
-                onChange={handleChange}
-                placeholder="Enter your college"
-              />
-              {errors.college && <span className="error">{errors.college}</span>}
             </div>
             <div className="form-group1">
               <label>Profile Photo</label>
