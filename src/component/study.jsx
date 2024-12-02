@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './study.css';
 import logoutTune from '../assest/intro_music.mp3';
-
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, set } from 'firebase/database';
 
 import notesIcon from '../assest/notes.jpeg';
 import quizIcon from '../assest/quiz1.png';
@@ -26,6 +25,15 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
+        // if (!token) {
+        //     // If no token exists, redirect to login
+        //     navigate('/login');
+        //     return;
+        // }
+
+        const studentId = localStorage.getItem('studentRoll_no'); // Assuming you store student ID in localStorage
+        if (!studentId) return;
+
         const name = localStorage.getItem('studentName');
         const registered = localStorage.getItem('isRegistered');
         const profilePhoto = localStorage.getItem('profilePhotoURL');
@@ -40,17 +48,20 @@ const StudentDashboard = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
+        const studentId = localStorage.getItem('studentRoll_no');
+        if (!studentId) return;
+
         const db = getDatabase();
-        const notificationsRef = ref(db, 'notifications');
+        const notificationsRef = ref(db, `notifications/${studentId}`); // Fetch notifications for the logged-in student
 
         onValue(notificationsRef, (snapshot) => {
             if (snapshot.exists()) {
                 const notificationsData = Object.values(snapshot.val());
                 setNotifications(notificationsData);
-                setUnreadCount(notificationsData.length); // Set unread count to the number of new notifications
+                setUnreadCount(notificationsData.filter(notification => !notification.read).length); // Filter unread notifications
             }
         });
     }, []);
@@ -71,6 +82,7 @@ const StudentDashboard = () => {
         setTimeout(() => {
             localStorage.removeItem('authToken');
             localStorage.removeItem('studentName');
+            localStorage.removeItem('studentRoll_no'); // Clear studentId on logout
 
             setIsLoggedIn(false);
             setIsWaiting(false);
@@ -84,6 +96,13 @@ const StudentDashboard = () => {
     };
 
     const handleNotificationClick = (notification) => {
+        // Mark notification as read in the database
+        const studentId = localStorage.getItem('studentId');
+        const db = getDatabase();
+        const notificationRef = ref(db, `notifications/${studentId}/${notification.id}`);
+        set(notificationRef, { ...notification, read: true });
+
+        // Navigate to the linked page
         navigate(notification.link);
         setShowNotifications(false);
     };
@@ -136,7 +155,6 @@ const StudentDashboard = () => {
 
             {!isRegistered && !isLoggedIn && (
                 <div className="auth-buttons">
-                    
                     <button className="register" onClick={handleRegisterClick}>Register</button>
                     <button className="login" onClick={handleLoginClick}>Login</button>
                 </div>
@@ -204,7 +222,6 @@ const StudentDashboard = () => {
                         <button className="btn" onClick={() => navigate('/QuizPanel')}>Start Quiz</button>
                     </div>
 
-
                     <div className="option-card">
                         <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
                         <h3>PYQ</h3>
@@ -218,4 +235,7 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
+
+
+
 
