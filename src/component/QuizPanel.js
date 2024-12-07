@@ -17,37 +17,55 @@ const QuizPanel = () => {
   };
 
   return (
-    <div>
-      <h2>Quiz Panel</h2>
-      <form>
-        <div>
+    <div className="quiz-panel">
+      <h2 className="quiz-title">Quiz Panel</h2>
+      <form className="quiz-form">
+        <div className="form-group">
           <label>Branch:</label>
-          <select value={branch} onChange={(e) => setBranch(e.target.value)}>
+          <select
+            className="form-select"
+            value={branch}
+            onChange={(e) => setBranch(e.target.value)}
+          >
             <option value="">Select Branch</option>
             <option value="CSE">CSE</option>
             <option value="ECE">ECE</option>
             <option value="Mechanical">Mechanical</option>
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label>Semester:</label>
-          <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+          <select
+            className="form-select"
+            value={semester}
+            onChange={(e) => setSemester(e.target.value)}
+          >
             <option value="">Select Semester</option>
             <option value="1">1st Semester</option>
             <option value="2">2nd Semester</option>
             <option value="3">3rd Semester</option>
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label>Difficulty Level:</label>
-          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+          <select
+            className="form-select"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
             <option value="">Select Difficulty</option>
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
         </div>
-        <button type="button1" onClick={startQuiz}>Start Quiz</button>
+        <button
+          type="button"
+          className="start-btn"
+          onClick={startQuiz}
+        >
+          Start Quiz
+        </button>
       </form>
     </div>
   );
