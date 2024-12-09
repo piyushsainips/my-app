@@ -58,7 +58,7 @@ const QuizApp = () => {
     } else {
       setIsFinished(true);
     }
-  }, [currentQuestion, quizData.length]);
+  }, [currentQuestion]);
 
   // Timer and blinking logic
   useEffect(() => {
