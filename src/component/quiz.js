@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useNavigate } from "react-router-dom";
@@ -42,10 +42,29 @@ const QuizApp = () => {
   // Sound effect
   const audioRef = React.useRef(new Audio(warningSound));
 
+  // Handle skipping questions
+  const handleSkipQuestion = useCallback(() => {
+    setSkippedQuestions((prev) => prev + 1);
+    setAnswerResults((prev) => [...prev, "skipped"]);
+    setSelectedOption(null);
+    setIsCorrect(null);
+    setTimeLeft(20);
+    setIsBlinking(false);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+    } else {
+      setIsFinished(true);
+    }
+  }, [currentQuestion, quizData.length]);
+
+  // Timer and blinking logic
   useEffect(() => {
     if (timeLeft > 0 && !isFinished) {
       const timerId = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((prev) => prev - 1);
         if (timeLeft === 5) {
           setIsBlinking(true);
           audioRef.current.play();
@@ -59,7 +78,7 @@ const QuizApp = () => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-  }, [timeLeft, isFinished]);
+  }, [timeLeft, isFinished, handleSkipQuestion]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -77,23 +96,6 @@ const QuizApp = () => {
   };
 
   const handleNextQuestion = () => {
-    setSelectedOption(null);
-    setIsCorrect(null);
-    setTimeLeft(20);
-    setIsBlinking(false);
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
-
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setIsFinished(true);
-    }
-  };
-
-  const handleSkipQuestion = () => {
-    setSkippedQuestions(skippedQuestions + 1);
-    setAnswerResults([...answerResults, "skipped"]);
     setSelectedOption(null);
     setIsCorrect(null);
     setTimeLeft(20);
@@ -202,24 +204,23 @@ const QuizApp = () => {
         </div>
       ) : (
         <div className="result-box">
-        <button className="back-button" onClick={() => navigate("/")}>
-          Back
-        </button>
-        <h2>Quiz Finished!</h2>
-        <p>Your score is {score}/{quizData.length}</p>
-        <div className="result-controls">
-          <button className="restart-button" onClick={restartQuiz}>Restart Quiz</button>
-          <button className="progress-button" onClick={renderPieChart}>See Progress</button>
+          <button className="back-button" onClick={() => navigate("/")}>
+            Back
+          </button>
+          <h2>Quiz Finished!</h2>
+          <p>Your score is {score}/{quizData.length}</p>
+          <div className="result-controls">
+            <button className="restart-button" onClick={restartQuiz}>Restart Quiz</button>
+            <button className="progress-button" onClick={renderPieChart}>See Progress</button>
+          </div>
+          <div className="progress-details">
+            {renderPieChart()}
+          </div>
+          <div className="suggestion-box">
+            <h3>Suggestions:</h3>
+            <p>{getSuggestions()}</p>
+          </div>
         </div>
-        <div className="progress-details">
-          {renderPieChart()}
-        </div>
-        <div className="suggestion-box">
-          <h3>Suggestions:</h3>
-          <p>{getSuggestions()}</p>
-        </div>
-      </div>
-      
       )}
     </div>
   );
