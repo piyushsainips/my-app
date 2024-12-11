@@ -1,0 +1,237 @@
+/* ResultPage.css */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f4f6f7;
+  --text-color: #2c3e50;
+  --correct-color: #4caf50;
+  --incorrect-color: #f44336;
+  --white: #ffffff;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+}
+
+.result-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--white);
+  box-shadow: 0 10px 25px var(--shadow-light);
+  border-radius: 15px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.result-page h2 {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.result-summary {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px var(--shadow-light);
+}
+
+.result-summary h3 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.result-summary p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.total {
+  height: 30px;
+  font-weight: 500;
+  color: Blue;
+  align-content: center;
+}
+
+.correct {
+  align-content: center;
+  height: 30px;
+  font-weight: 500;
+  color: green;
+}
+
+.incorrect {
+  margin-left: 10px;
+  height: 30px;
+  align-content: center;
+  font-weight: 500;
+  color: rgb(246, 11, 11);
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  margin: 30px auto;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 13px;
+  padding: 3px;
+  margin: 20px 0;
+}
+
+.progress-bar {
+  height: 20px;
+  background: linear-gradient(to right, #3498db, #2ecc71);
+  border-radius: 10px;
+  transition: width 1.5s ease-in-out;
+}
+
+.performance-message {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-top: 20px;
+}
+
+.suggestions-box {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px var(--shadow-light);
+}
+
+.suggestions-box h3 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.suggestion-item {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px var(--shadow-light);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.suggestion-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px var(--shadow-medium);
+}
+
+.suggestion-item .tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--incorrect-color);
+  color: var(--white);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.suggestion-item p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.suggestion-item strong {
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+
+.retake-quiz-btn {
+  display: block;
+  width: 250px;
+  margin: 30px auto;
+  padding: 15px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+.retake-quiz-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 10px var(--shadow-medium);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .result-page {
+    padding: 15px;
+    width: 95%;
+  }
+
+  .result-page h2 {
+    font-size: 2rem;
+  }
+
+  .result-summary,
+  .suggestions-box {
+    padding: 15px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .progress-bar {
+    height: 15px;
+  }
+
+  .performance-message {
+    font-size: 1rem;
+  }
+
+  .suggestion-item {
+    padding: 15px;
+  }
+
+  .retake-quiz-btn {
+    width: 200px;
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .result-page h2 {
+    font-size: 1.5rem;
+  }
+
+  .result-summary p,
+  .suggestion-item p {
+    font-size: 0.9rem;
+  }
+
+  .chart-container {
+    height: 200px;
+  }
+
+  .retake-quiz-btn {
+    width: 180px;
+    font-size: 0.9rem;
+  }
+}
