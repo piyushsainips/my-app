@@ -1,72 +1,90 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './QuizPanel.css'; // Import the CSS file
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import '../styles/QuizPanel.css'
+
+const branches = [
+  { label: "Computer Science", value: "Computer Science" },
+  { label: "Electrical Engineering", value: "Electrical Engineering" },
+  { label: "Mechanical Engineering", value: "Mechanical Engineering" }
+];
+
+const semesters = [
+  { label: "1st Semester", value: "1" },
+  { label: "2nd Semester", value: "2" }
+];
+
+const difficulties = [
+  { label: "Easy", value: "Easy" },
+  { label: "Medium", value: "Medium" },
+  { label: "Hard", value: "Hard" }
+];
 
 const QuizPanel = () => {
-  const [branch, setBranch] = useState('');
-  const [semester, setSemester] = useState('');
-  const [difficulty, setDifficulty] = useState('');
+  const [branch, setBranch] = useState("");
+  const [semester, setSemester] = useState("");
+  const [difficulty, setDifficulty] = useState("");
   const navigate = useNavigate();
 
-  const startQuiz = () => {
-    if (branch && semester && difficulty) {
-      navigate('/Quiz', { state: { branch, semester, difficulty } });
-    } else {
-      alert('Please fill all the fields');
+  const handleStartQuiz = () => {
+    if (!branch || !semester || !difficulty) {
+      alert("Please select all options!");
+      return;
     }
+  
+    // Navigate to QuizPage with selected options as state
+    navigate("/quiz", { state: { branch, semester, difficulty } });
   };
+  
 
   return (
     <div className="quiz-panel">
-      <h2 className="quiz-title">Quiz Panel</h2>
-      <form className="quiz-form">
-        <div className="form-group">
-          <label>Branch:</label>
-          <select
-            className="form-select"
-            value={branch}
-            onChange={(e) => setBranch(e.target.value)}
-          >
-            <option value="">Select Branch</option>
-            <option value="CSE">CSE</option>
-            <option value="ECE">ECE</option>
-            <option value="Mechanical">Mechanical</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Semester:</label>
-          <select
-            className="form-select"
-            value={semester}
-            onChange={(e) => setSemester(e.target.value)}
-          >
-            <option value="">Select Semester</option>
-            <option value="1">1st Semester</option>
-            <option value="2">2nd Semester</option>
-            <option value="3">3rd Semester</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Difficulty Level:</label>
-          <select
-            className="form-select"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="">Select Difficulty</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
-        <button
-          type="button"
-          className="start-btn"
-          onClick={startQuiz}
+      <h2>Quiz Panel</h2>
+      <div>
+        <label>Branch:</label>
+        <select value={branch} onChange={(e) => setBranch(e.target.value)}>
+          <option value="" disabled>
+            Select Branch
+          </option>
+          {branches.map((b) => (
+            <option key={b.value} value={b.value}>
+              {b.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Semester:</label>
+        <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+          <option value="" disabled>
+            Select Semester
+          </option>
+          {semesters.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Difficulty Level:</label>
+        <select
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
         >
-          Start Quiz
-        </button>
-      </form>
+          <option value="" disabled>
+            Select Difficulty
+          </option>
+          {difficulties.map((d) => (
+            <option key={d.value} value={d.value}>
+              {d.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <button onClick={handleStartQuiz}>Start Quiz</button>
     </div>
   );
 };
