@@ -1,37 +1,47 @@
 from flask import Flask, request, jsonify
+import json
 import pickle
-import joblib
 
-from flask_cors import CORS
-app = Flask(_name_)
-CORS(app) 
+app = Flask(__name__)
+
+# Load questions data
+with open("./questions.json", "r") as file:
+    questions_data = json.load(file)
 
 # Load the trained model
-with open('engineering_chatbot_model.pkl', 'rb') as model_file:
-    model = joblib.load(model_file)
+with open("./improvement_model.pkl", "rb") as file:
+    improvement_model = pickle.load(file)
 
-# Load the vectorizer
-with open('vectorizer.pkl', 'rb') as vec_file:
-    vectorizer = pickle.load(vec_file)
+@app.route("/api/questions", methods=["GET"])
+def get_questions():
+    branch = request.args.get("branch")
+    semester = request.args.get("semester")
+    difficulty = request.args.get("difficulty")
 
-# Endpoint to get an answer for a question
-@app.route('/get-answer', methods=['POST'])
-def get_answer():
-    # Your function implementation
-    data = request.json
-    question = data.get('question')
+    # Fetch questions based on branch, semester, and difficulty
+    questions = (
+        questions_data.get(branch, {})
+        .get(semester, {})
+        .get(difficulty, [])
+    )
+    if not questions:
+        return jsonify({"message": "No questions available"}), 404
 
-    if not question:
-        return jsonify({'error': 'No question provided'})
+    return jsonify(questions)
 
-    # Transform the input question using the vectorizer
-    question_vectorized = vectorizer.transform([question])
+@app.route("/api/suggestions", methods=["POST"])
+def get_suggestions():
+    data = request.get_json()
+    incorrect_answers = data.get("incorrectAnswers", [])  # List of incorrect question IDs
+    suggestions = []
 
-    # Predict the answer using the trained model
-    predicted_answer = model.predict(question_vectorized)[0]
+    for answer in incorrect_answers:
+        question_id = answer.get("question_id")
+        # Predict topic for improvement
+        prediction = improvement_model.predict([[question_id, 0, 0]])[0]
+        suggestions.append(prediction)
 
-    # Return the predicted answer as a JSON response
-    return jsonify({'answer': predicted_answer})
+    return jsonify({"suggestions": suggestions})
 
-if _name_ == '_main_':
+if __name__ == "__main__":
     app.run(debug=True)
