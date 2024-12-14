@@ -100,6 +100,10 @@ const StudentDashboard = () => {
     const handleLoginClick = () => navigate('/login');
     const handleProfileClick = () => navigate('/profile');
     const toggleMenu = () => setShowMenu(!showMenu);
+    const handleQuizPanel = () => navigate(isLoggedIn ? '/QuizPanel' : '/login');
+    const handleQuestionPaperList = ()=> navigate(isLoggedIn ? '/QuestionPaperList' : '/login');
+
+
 
     return (
         <>
@@ -159,7 +163,7 @@ const StudentDashboard = () => {
             <div className="dashboard-container">
                 <h1>Welcome, {studentName}!</h1>
                 <h2>Select an option below to continue:</h2>
-                <div className="options-container">
+                <div className="options-container1">
                     <div className="option-card">
                         <img src={notesIcon} alt="Notes Icon" className="option-icon" />
                         <h3>Notes</h3>
@@ -170,13 +174,13 @@ const StudentDashboard = () => {
                         <img src={quizIcon} alt="Quiz Icon" className="option-icon" />
                         <h3>Quiz</h3>
                         <p>Test your knowledge by taking quizzes on various subjects.</p>
-                        <button className="btn" onClick={() => navigate('/QuizPanel')}>Start Quiz</button>
+                        <button className="btn" onClick={handleQuizPanel}>Start Quiz</button>
                     </div>
                     <div className="option-card">
                         <img src={PYQIcon} alt="PYQ Icon" className="option-icon1" />
                         <h3>PYQ</h3>
                         <p>Get Previous Year Question Papers.</p>
-                        <button className="btn" onClick={() => navigate('QuestionPaperList')}>PYQ Papers</button>
+                        <button className="btn" onClick={handleQuestionPaperList}>PYQ Papers</button>
                     </div>
                 </div>
             </div>

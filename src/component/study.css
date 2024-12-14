@@ -95,7 +95,7 @@
 }
 
 /* Containers for options */
-.options-container {
+.options-container1 {
     display: flex;
     justify-content: space-around;
     margin-top: 50px;
@@ -238,7 +238,7 @@
         top: 60px;
     }
 
-    .options-container {
+    .options-container1 {
         flex-direction: column;
         align-items: center;
     }

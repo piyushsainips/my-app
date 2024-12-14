@@ -47,11 +47,11 @@
   line-height: 1.5;
 }
 
-/* .options-container {
+.options-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-} */
+}
 
 .option-button {
   display: flex;
