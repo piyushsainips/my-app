@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './QuizPanel.css'
+import '../styles/QuizPanel.css'
 
 const branches = [
   { label: "Computer Science", value: "Computer Science" },
