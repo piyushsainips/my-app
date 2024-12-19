@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/QuizPage.css";
+import "./QuizPage.css";
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
   Legend
 } from "chart.js";
-import "../styles/ResultPage.css";
+import "./ResultPage.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
